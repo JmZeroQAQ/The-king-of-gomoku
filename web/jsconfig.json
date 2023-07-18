@@ -1,0 +1,13 @@
+// 解决vscode不识别@路径
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        },
+        "target": "ES6",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}

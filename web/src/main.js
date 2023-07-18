@@ -1,5 +1,13 @@
 import { createApp } from 'vue'
-import './style.css'
+import '@/assets/reset.scss'
 import App from './App.vue'
+import router from './router/index'; //导入路由
+import { createPinia } from 'pinia'
 
-createApp(App).mount('#app')
+const app = createApp(App);
+app.use(router);
+
+const pinia = createPinia();
+app.use(pinia);
+
+app.mount('#app');
