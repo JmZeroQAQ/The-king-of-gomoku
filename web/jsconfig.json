@@ -1,6 +1,7 @@
 // 解决vscode不识别@路径
 {
     "compilerOptions": {
+        "types": ["element-plus/global"],
         "baseUrl": ".",
         "paths": {
             "@/*": ["src/*"]
