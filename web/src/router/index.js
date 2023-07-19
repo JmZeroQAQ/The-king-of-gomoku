@@ -1,17 +1,54 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '@/views/HomeView.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import BaseLayout from "@/layout/BaseLayout.vue";
 
 export const routes = [
-    {
-        path: "/",
-        component: HomeView,
-        name: "home"
-    },
+  {
+    path: "/",
+    redirect: "/home/",
+  },
+  {
+    path: "/home/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/home/HomeView.vue'),
+        name: "home",
+    }],
+  },
+  {
+    path: "/game/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/Game/GameView.vue'),
+    }],
+  },
+  {
+    path: "/profile/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/profile/ProfileView.vue'),
+    }],
+  },
+  {
+    path: "/404/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/404/NotFoundView.vue'),
+    }],
+  },
+  // 未匹配的全部重定向到404页面
+  {
+    path: "/:catchAll(.*)",
+    redirect: "/404/"
+  }
 ];
 
 const router = createRouter({
-    routes,
-    history: createWebHistory(),
+  routes,
+  history: createWebHistory(),
 });
 
 export default router;

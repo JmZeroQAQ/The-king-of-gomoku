@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <h1>Home</h1>
-    </div>
+    <h1>Game Page</h1>
 </template>
 
 <script setup>

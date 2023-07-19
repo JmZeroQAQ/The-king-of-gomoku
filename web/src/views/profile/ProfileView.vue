@@ -1,6 +1,5 @@
 <template>
-  <!-- 路由出口 -->
-  <router-view></router-view>
+    <h1>Profile</h1>
 </template>
 
 <script setup>
