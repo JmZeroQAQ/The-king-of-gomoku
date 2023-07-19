@@ -1,8 +1,13 @@
 <template>
-    <h1>Game Page</h1>
+    <el-row justify="center">
+        <el-col :span="12">
+            <GameMap />
+        </el-col>
+    </el-row>
 </template>
 
 <script setup>
+import GameMap from '@/components/GameMap.vue';
 
 </script>
 
