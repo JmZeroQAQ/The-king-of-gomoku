@@ -20,7 +20,7 @@ export const routes = [
     component: BaseLayout,
     children: [{
         path: "",
-        component: () => import('@/views/Game/GameView.vue'),
+        component: () => import('@/views/game/GameView.vue'),
     }],
   },
   {
@@ -29,6 +29,14 @@ export const routes = [
     children: [{
         path: "",
         component: () => import('@/views/profile/ProfileView.vue'),
+    }],
+  },
+  {
+    path: "/login/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/login/LoginView.vue'),
     }],
   },
   {

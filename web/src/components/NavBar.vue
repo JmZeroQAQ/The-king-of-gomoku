@@ -35,5 +35,6 @@ const handleSelect = (key, keyPath) => {
 .logo {
     font-weight: 800;
     font-size: 18px;
+    color: #409EFF;
 }
 </style>
