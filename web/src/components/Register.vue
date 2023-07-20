@@ -18,7 +18,7 @@
             title="注册账号"
             type="info"
             :closable="false"
-            show-icon="info"
+            show-icon
           />
         </div>
 

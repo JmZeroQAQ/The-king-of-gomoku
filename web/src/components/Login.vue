@@ -13,12 +13,12 @@
         size="large"
         :fill="true"
       >
-        <div class="login-msg">
+        <div>
           <el-alert
             title="请输入账号密码"
             type="info"
             :closable="false"
-            show-icon="info"
+            show-icon
           />
         </div>
 
