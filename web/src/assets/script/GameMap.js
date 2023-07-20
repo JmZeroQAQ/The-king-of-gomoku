@@ -22,16 +22,25 @@ export class GameMap extends BaseGameObject {
 
         // 棋盘中的棋子
         this.chessPieces = [];
+
+        // 获胜棋子的位置
+        this.winPosition = [];
+
+        // 游戏是否结束
+        this.isOver = false;
+        // 获胜的棋子的方向
+        this.dResult = []; // 0 表示水平方向，1表示竖直方向，2表示左下方向，3表示右下方向
     }
 
     addListeningEvents() {
         this.ctx.canvas.focus();
 
         this.ctx.canvas.addEventListener("click", e => {
+            
             const x = parseInt(e.offsetY / this.scale);
             const y = parseInt(e.offsetX / this.scale);
 
-            if(this.gameMap[x][y] !== 0) return ;
+            if(this.gameMap[x][y] !== 0 || this.isOver) return ;
             
             if(this.step % 2 === 0) {
                 this.store.setChessPiece(x, y, 1);
@@ -69,11 +78,110 @@ export class GameMap extends BaseGameObject {
         }
     }
 
+    setChessPieceIsRenderMark(x, y) {
+        for(const chessPiece of this.chessPieces) {
+            if(chessPiece.x === x && chessPiece.y === y) {
+                chessPiece.isRenderMark = true;
+                break;
+            }
+        }
+    }
+
+    // 检查局面
+    checkSituation() {
+        for(let i = 0; i < 12; i++) {
+            for(let j = 0; j < 12; j++) {
+                if(this.gameMap[i][j] !== 0) {
+                    const dx = 1, dy = 1;
+                    const currentValue = this.gameMap[i][j];
+
+                    // 判断水平方向
+                    for(let k = 0; k < 4; k++) {
+                        const ny = j + dy * (k + 1);
+                        if(ny >= this.cols || this.gameMap[i][ny] !== currentValue) break;
+                        if(k === 3) this.dResult.push(0);
+                    }
+                    // 判断竖直方向
+                    for(let k = 0; k < 4; k++) {
+                        const nx = i + dx * (k + 1);
+                        if(nx >= this.rows || this.gameMap[nx][j] !== currentValue) {
+                            break;
+                        }
+                        if(k === 3) {
+                            this.dResult.push(1);
+                        }
+                    }
+
+                    // 判断左下方向
+                    for(let k = 0; k < 4; k++) {
+                        const nx = i + dx * (k + 1);
+                        const ny = j - dy * (k + 1);
+                        if(nx >= this.rows || ny < 0 ||  this.gameMap[nx][ny] !== currentValue) {
+                            break;
+                        }
+                        if(k === 3) {
+                            this.dResult.push(2);
+                        }
+                    }
+
+                    // 判断右下方向
+                    for(let k = 0; k < 4; k++) {
+                        const nx = i + dx * (k + 1);
+                        const ny = j + dy * (k + 1);
+                        if(nx >= this.rows || ny >= this.cols || this.gameMap[nx][ny] !== currentValue) {
+                            break;
+                        }
+                        if(k === 3) {
+                            this.dResult.push(3);
+                        }
+                    }
+
+                    if(this.dResult.length > 0) {
+                        this.isOver = true;
+
+                        this.setChessPieceIsRenderMark(i, j);
+                        for(const d of this.dResult) {
+                            if(d === 0) {
+                                for(let k = 0; k < 4; k++) {
+                                    const ny = j + dy * (k + 1);
+                                    this.setChessPieceIsRenderMark(i, ny);
+                                }
+                            } else if(d === 1) {
+                                for(let k = 0; k < 4; k++) {
+                                    const nx = i + dx * (k + 1);
+                                    this.setChessPieceIsRenderMark(nx, j);
+                                }
+                            } else if(d === 2) {
+                                for(let k = 0; k < 4; k++) {
+                                    const nx = i + dx * (k + 1);
+                                    const ny = j - dy * (k + 1);
+                                    this.setChessPieceIsRenderMark(nx, ny);
+                                }
+                            } else if(d === 3) {
+                                for(let k = 0; k < 4; k++) {
+                                    const nx = i + dx * (k + 1);
+                                    const ny = j + dy * (k + 1);
+                                    this.setChessPieceIsRenderMark(nx, ny);
+                                }
+                            }
+                        }
+                        this.dResult = [];
+                    }
+                }
+            }
+        }
+    }
+
     update() {
         this.udpate_size();
-        // 添加新放置的棋子
-        this.udpateChessPiece();
+        if(this.isOver === false) {
+            // 添加新放置的棋子
+            this.udpateChessPiece();
+            // 判断局面
+            this.checkSituation();
+        }
         this.render();
+        
     }
 
     render() {

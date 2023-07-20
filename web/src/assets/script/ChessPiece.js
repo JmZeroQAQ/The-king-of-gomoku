@@ -20,12 +20,6 @@ export class ChessPiece extends BaseGameObject {
 
     update() {
         this.render();
-        if(this.isRenderMark) this.renderMark();
-    }
-
-    renderMark() {
-        ctx.fillStyle = "red";
-        ctx.fillRect(drawX - scale * 0.1, drawY - scale * 0.1, scale * 0.2, scale * 0.2);
     }
 
     render() {
@@ -42,6 +36,12 @@ export class ChessPiece extends BaseGameObject {
         
         // 当放置完棋子后在中心显示红点
         if(this.currentStep === this.gameMap.step) {
+            ctx.fillStyle = "red";
+            ctx.fillRect(drawX - scale * 0.1, drawY - scale * 0.1, scale * 0.2, scale * 0.2);
+        }
+
+        // 胜利时在中心显示红点
+        if(this.isRenderMark) {
             ctx.fillStyle = "red";
             ctx.fillRect(drawX - scale * 0.1, drawY - scale * 0.1, scale * 0.2, scale * 0.2);
         }
