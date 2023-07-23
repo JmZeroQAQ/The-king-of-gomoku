@@ -185,7 +185,7 @@ export class GameMap extends BaseGameObject {
     }
 
     render() {
-        const color_even = "#046A9E", color_odd = "#7DB6BF";
+        const color_even = "#79bbff", color_odd = "#a0cfff";
         for(let r = 0; r < this.rows; r++) {
             for(let c = 0; c < this.cols; c++) {
                 if((r + c) % 2 == 0) {

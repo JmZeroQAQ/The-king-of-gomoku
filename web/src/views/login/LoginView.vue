@@ -1,6 +1,6 @@
 <template>
   <el-row class="login-container" justify="center">
-    <el-col :span="12">
+    <el-col :lg="12" :span="20">
       <el-card>
         <el-row>
           <el-col :span="12">
@@ -35,7 +35,7 @@ import Login from '@/components/Login.vue';
 import Register from '@/components/Register.vue';
 import { ref } from 'vue';
 
-const state = ref("register");
+const state = ref("login");
 
 function setState(newState) {
   state.value = newState;
@@ -67,6 +67,7 @@ function setState(newState) {
 .msg-welcome {
   font-size: 24px;
   font-weight: 800;
+  letter-spacing: 2px;
 }
 
 .msg-join-us {

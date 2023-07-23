@@ -15,10 +15,11 @@
       >
         <div class="login-msg">
           <el-alert
-            title="注册账号"
-            type="info"
+            :title="alertSwitch === 'success' ? '注册成功' : '注册账号'"
+            :type="alertSwitch"
             :closable="false"
             show-icon
+            :effect="alertSwitch === 'success' ? 'dark' : 'light'"
           />
         </div>
 
@@ -74,9 +75,20 @@ const user_account = ref("");
 const user_password = ref("");
 const user_confirm_password = ref("");
 
+// alert的控制开关
+const alertSwitch = ref("info");
+
+setTimeout(() => {
+  alertSwitch.value = "success";
+}, 2000);
+
 </script>
 
 <style lang="scss" scoped>
+.el-alert {
+  transition: all 1s ease;
+}
+
 .login-header {
     padding-left: 20px;
 }

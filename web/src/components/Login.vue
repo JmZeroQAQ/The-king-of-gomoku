@@ -14,11 +14,13 @@
         :fill="true"
       >
         <div>
+          <!-- 提示信息 -->
           <el-alert
-            title="请输入账号密码"
-            type="info"
+            :title="alertSwitch === 'success' ? '登录成功' : '请输入账号密码'"
+            :type="alertSwitch"
             :closable="false"
             show-icon
+            :effect="alertSwitch === 'success' ? 'dark' : 'light'"
           />
         </div>
 
@@ -65,9 +67,22 @@ import { ref } from "vue";
 
 const user_account = ref("");
 const user_password = ref("");
+
+// alert的控制开关
+const alertSwitch = ref("info");
+
+setTimeout(() => {
+  alertSwitch.value = "success";
+}, 2000);
+
 </script>
 
 <style lang="scss" scoped>
+
+.el-alert {
+  transition: all 1s ease;
+}
+
 .login-header {
     padding-left: 20px;
 }
