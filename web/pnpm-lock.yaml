@@ -8,6 +8,9 @@ dependencies:
   element-plus:
     specifier: ^2.3.8
     version: registry.npmmirror.com/element-plus@2.3.8(vue@3.3.4)
+  jquery:
+    specifier: ^3.7.0
+    version: registry.npmmirror.com/jquery@3.7.0
   pinia:
     specifier: ^2.1.4
     version: registry.npmmirror.com/pinia@2.1.4(vue@3.3.4)
@@ -710,6 +713,12 @@ packages:
     version: 7.0.0
     engines: {node: '>=0.12.0'}
     dev: true
+
+  registry.npmmirror.com/jquery@3.7.0:
+    resolution: {integrity: sha512-umpJ0/k8X0MvD1ds0P9SfowREz2LenHsQaxSohMZ5OMNEU2r0tf8pdeEFTHMFxWVxKNyU9rTtK3CWzUCTKJUeQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/jquery/-/jquery-3.7.0.tgz}
+    name: jquery
+    version: 3.7.0
+    dev: false
 
   registry.npmmirror.com/lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash-es/-/lodash-es-4.17.21.tgz}
