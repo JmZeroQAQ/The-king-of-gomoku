@@ -40,7 +40,7 @@ public class SecurityConfig  {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/user/account/token/", "/user/account/register/", "/pk/start/game/", "/pk/receive/bot/move/").permitAll()  //放置公开链接
+                .antMatchers("/user/login/", "/user/register/").permitAll()  //放置公开链接
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 
