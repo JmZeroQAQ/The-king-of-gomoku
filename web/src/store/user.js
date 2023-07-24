@@ -1,31 +1,38 @@
 import { defineStore } from "pinia";
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 
 export const useUserStore = defineStore("userStore", () => {
-    const username = ref('');
-    const avatar = ref('');
-    const rating = ref(1500);
-    const id = ref(-1);
+    const user = reactive({
+        id: -1,
+        name: "",
+        avatar: "",
+        rating: "",
+    });
+    // 是否登录
     const isAuth = ref(false);
+    // jwt令牌
+    let token = "";
 
     function updateUser(user) {
-        username.value = user.username;
-        avatar.value = user.avatar;
-        rating.value = user.rating;
-        id.value = user.id;
+        user.id = user.id;
+        user.name = user.name;
+        user.avatar = user.avatar;
+        user.rating = user.rating;
     }
 
     function setIsAuth(flag) {
         isAuth.value = flag;
     }
 
+    function setToken(token) {
+        token = token;
+    }
+
     return {
-        username,
-        avatar,
-        rating,
-        id,
+        user,
         isAuth,
         updateUser,
         setIsAuth,
+        setToken,
     }
 });
