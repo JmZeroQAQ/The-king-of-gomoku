@@ -68,9 +68,9 @@ export class GameMap extends BaseGameObject {
                     const x = i;
                     const y = j;
                     if(this.store.gameMap[i][j] === 1) {
-                        this.chessPieces.push(new ChessPiece({x, y, step: this.step, color: "black"}, this));
+                        this.chessPieces.push(new ChessPiece({x, y, step: this.step, color: "#303133"}, this));
                     } else if(this.store.gameMap[i][j] === 2) {
-                        this.chessPieces.push(new ChessPiece({x, y, step: this.step, color: "white"}, this));
+                        this.chessPieces.push(new ChessPiece({x, y, step: this.step, color: "#FAFCFF"}, this));
                     }
                     this.gameMap = JSON.parse(JSON.stringify(this.store.gameMap));
                 }
@@ -185,7 +185,7 @@ export class GameMap extends BaseGameObject {
     }
 
     render() {
-        const color_even = "#79bbff", color_odd = "#a0cfff";
+        const color_even = "#eebe77", color_odd = "#f8e3c5";
         for(let r = 0; r < this.rows; r++) {
             for(let c = 0; c < this.cols; c++) {
                 if((r + c) % 2 == 0) {

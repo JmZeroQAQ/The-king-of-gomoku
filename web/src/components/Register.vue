@@ -81,6 +81,8 @@ const confirmed_password = ref("");
 // alert的类型
 const alertType = ref("info");
 
+const emit = defineEmits(["setState"]);
+
 
 async function registerEvent() {
   const data = await register(username.value, password.value, confirmed_password.value);
@@ -88,6 +90,11 @@ async function registerEvent() {
   if(data.message === "success") {
     alertNotice.value = "账号注册成功";
     alertType.value = "success";
+
+    setTimeout(() => {
+      emit("setState", "login");
+    }, 1000);
+
   } else {
     alertNotice.value = data.message;
     alertType.value = "error";
