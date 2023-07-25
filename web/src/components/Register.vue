@@ -15,29 +15,29 @@
       >
         <div class="login-msg">
           <el-alert
-            :title="alertSwitch === 'success' ? '注册成功' : '注册账号'"
-            :type="alertSwitch"
+            :title="alertNotice"
+            :type="alertType"
             :closable="false"
             show-icon
-            :effect="alertSwitch === 'success' ? 'dark' : 'light'"
+            :effect="getAlertEffect()"
           />
         </div>
 
         <el-input
-          v-model="user_account"
+          v-model="username"
           size="large"
           placeholder="用户名"
           clearable
         />
         <el-input
-          v-model="user_password"
+          v-model="password"
           size="large"
           type="password"
           placeholder="请输入密码"
           show-password
         />
         <el-input
-          v-model="user_confirm_password"
+          v-model="confirmed_password"
           size="large"
           type="password"
           placeholder="确认密码"
@@ -51,6 +51,7 @@
             class="login-button-container-button"
             size="large"
             type="primary"
+            @click="registerEvent"
             >注册</el-button
           >
         </el-col>
@@ -70,17 +71,33 @@
 
 <script setup>
 import { ref } from "vue";
+import { register } from '@/apis/register';
 
-const user_account = ref("");
-const user_password = ref("");
-const user_confirm_password = ref("");
+const alertNotice = ref("注册账号");
+const username = ref("");
+const password = ref("");
+const confirmed_password = ref("");
 
-// alert的控制开关
-const alertSwitch = ref("info");
+// alert的类型
+const alertType = ref("info");
 
-setTimeout(() => {
-  alertSwitch.value = "success";
-}, 2000);
+
+async function registerEvent() {
+  const data = await register(username.value, password.value, confirmed_password.value);
+  
+  if(data.message === "success") {
+    alertNotice.value = "账号注册成功";
+    alertType.value = "success";
+  } else {
+    alertNotice.value = data.message;
+    alertType.value = "error";
+  }
+}
+
+function getAlertEffect() {
+  if(alertType.value === "info") return "light";
+  return "dark";
+}
 
 </script>
 

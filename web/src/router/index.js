@@ -13,6 +13,10 @@ export const routes = [
         path: "",
         component: () => import('@/views/home/HomeView.vue'),
         name: "home",
+        meta: {
+          // 是否需要登录后才可以进入
+          isAuth: false,
+        }
     }],
   },
   {
@@ -21,6 +25,10 @@ export const routes = [
     children: [{
         path: "",
         component: () => import('@/views/game/GameView.vue'),
+        meta: {
+          // 是否需要登录
+          isAuth: true,
+        }
     }],
   },
   {
@@ -29,6 +37,10 @@ export const routes = [
     children: [{
         path: "",
         component: () => import('@/views/profile/ProfileView.vue'),
+        meta: {
+          // 是否需要登录后才可以进入
+          isAuth: true,
+        }
     }],
   },
   {
@@ -37,6 +49,10 @@ export const routes = [
     children: [{
         path: "",
         component: () => import('@/views/login/LoginView.vue'),
+        meta: {
+          // 是否需要登录后才可以进入
+          isAuth: false,
+        }
     }],
   },
   {
@@ -45,6 +61,10 @@ export const routes = [
     children: [{
         path: "",
         component: () => import('@/views/404/NotFoundView.vue'),
+        meta: {
+          // 是否需要登录后才可以进入
+          isAuth: false,
+        }
     }],
   },
   // 未匹配的全部重定向到404页面

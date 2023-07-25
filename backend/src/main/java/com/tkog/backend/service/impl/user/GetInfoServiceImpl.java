@@ -11,8 +11,13 @@ public class GetInfoServiceImpl implements GetInfoService {
     @Override
     public JSONObject getInfo() {
         User user = GetUser.getUser();
-
         JSONObject resp = new JSONObject();
+
+        if(user == null) {
+            resp.put("message", "403");
+            return resp;
+        }
+
         resp.put("message", "success");
         resp.put("username", user.getUsername());
         resp.put("avatar", user.getAvatar());

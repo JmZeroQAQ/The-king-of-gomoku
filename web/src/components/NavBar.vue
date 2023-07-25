@@ -5,22 +5,35 @@
       mode="horizontal"
       :ellipsis="false"
       @select="handleSelect"
+      :router="true"
     >
-      <el-menu-item index="0" class="logo">TOKG</el-menu-item>
+      <el-menu-item index="/home/" class="logo">TOKG</el-menu-item>
       <div class="flex-grow" />
-      <el-sub-menu index="1">
-        <template #title>JmZeroQAQ</template>
-        <el-menu-item index="1-1">个人信息</el-menu-item>
-        <el-menu-item index="1-2">item two</el-menu-item>
-        <el-menu-item index="1-3">item three</el-menu-item>
+      <el-sub-menu v-if="isAuth"  index="1">
+        <template #title>
+          <span class="username">{{ user.name }}</span>
+        </template>
+        <el-menu-item index="/profile/">个人信息</el-menu-item>
+        <el-menu-item index="/record/">对局记录</el-menu-item>
+        <el-menu-item @click="logout">退出</el-menu-item>
       </el-sub-menu>
+      <el-menu-item v-else index="/login/" class="login">
+        登录/注册
+      </el-menu-item>
     </el-menu>
   </template>
 
 <script setup>
 import { ref } from 'vue';
+import { useUserStore } from '@/store/user';
+import { storeToRefs } from 'pinia';
 
-const activeIndex = ref('1');
+const userStore = useUserStore();
+
+const { isAuth, user } = storeToRefs(userStore);
+const { logout } = userStore;
+
+const activeIndex = ref('/home/');
 const handleSelect = (key, keyPath) => {
   console.log(key, keyPath)
 }
@@ -34,7 +47,17 @@ const handleSelect = (key, keyPath) => {
 
 .logo {
     font-weight: 800;
-    font-size: 24px;
+    font-size: 22px;
     color: #409EFF;
+}
+
+.username {
+  font-weight: 600;
+  color: #303133;
+}
+
+.login {
+  font-size: 16px;
+  font-weight: 600;
 }
 </style>

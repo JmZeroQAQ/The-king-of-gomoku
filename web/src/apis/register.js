@@ -16,8 +16,8 @@ export const register = (username, password, confirmed_password) => {
                 resolve(resp);
             },
 
-            error: resp => {
-                resolve(resp);
+            error: () => {
+                resolve({message: "哎呀，似乎遇到了一些问题"})
             },
         });
     })

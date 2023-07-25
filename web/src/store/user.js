@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from 'vue';
+import { getInfo } from '@/apis/getInfo';
+import { removeToken } from "@/utils/storage";
 
 export const useUserStore = defineStore("userStore", () => {
     const user = reactive({
@@ -8,31 +10,54 @@ export const useUserStore = defineStore("userStore", () => {
         avatar: "",
         rating: "",
     });
+
     // 是否登录
     const isAuth = ref(false);
     // jwt令牌
     let token = "";
 
-    function updateUser(user) {
-        user.id = user.id;
-        user.name = user.name;
-        user.avatar = user.avatar;
-        user.rating = user.rating;
+    async function asyncGetInfo() {
+        const data = await getInfo(token);
+        if(data.message === "success") {
+            user.id = data.id;
+            user.name = data.username;
+            user.avatar = data.avatar;
+            user.rating = data.rating;
+        } else {
+            if(data.code === 401) {
+                // 登录失效，localStorage清除失效的令牌
+                removeToken();
+                setIsAuth(false);
+                setToken("");
+            }
+        }
     }
 
     function setIsAuth(flag) {
         isAuth.value = flag;
     }
 
-    function setToken(token) {
-        token = token;
+    function setToken(new_token) {
+        token = new_token;
+    }
+
+    function logout() {
+        user.id = -1;
+        user.name = "";
+        user.avatar = "";
+        user.rating = "";
+
+        isAuth.value = false;
+        token = "";
+        removeToken();
     }
 
     return {
         user,
         isAuth,
-        updateUser,
+        asyncGetInfo,
         setIsAuth,
         setToken,
+        logout,
     }
 });

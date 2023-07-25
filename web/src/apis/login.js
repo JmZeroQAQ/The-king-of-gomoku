@@ -5,7 +5,7 @@ export const login = (username, password) => {
     return new Promise(resolve => {
         $.ajax({
             url: URL + "/user/login/",
-            type: "post",
+            type: "POST",
             data: {
                 username,
                 password,
@@ -15,8 +15,8 @@ export const login = (username, password) => {
                 resolve(resp);
             },
 
-            error: resp => {
-                resolve(resp);
+            error: () => {
+                resolve({message: "密码错误"});
             }
         });
     });

@@ -1,10 +1,13 @@
 package com.tkog.backend.config.filter;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.tkog.backend.enums.AppHttpCodeEnum;
 import com.tkog.backend.mapper.UserMapper;
 import com.tkog.backend.pojo.User;
 import com.tkog.backend.service.impl.utils.UserDetailsImpl;
 import com.tkog.backend.utils.JwtUtil;
 import com.sun.istack.internal.NotNull;
+import com.tkog.backend.utils.WebUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +27,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserMapper userMapper;
 
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -39,19 +43,28 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         token = token.substring(7);
 
-        String userid;
+        String userid = null;
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userid = claims.getSubject();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            JSONObject result = new JSONObject();
+            result.put("code", AppHttpCodeEnum.NEED_LOGIN.getCode());
+            result.put("message", AppHttpCodeEnum.NEED_LOGIN.getMessage());
+            WebUtils.renderString(response, result.toJSONString());
+            return;
         }
 
         // 通过userId来查找用户
         User user = userMapper.selectById(Integer.parseInt(userid));
 
+        // 用户不存在
         if(user == null) {
-            throw new RuntimeException("用户名不存在");
+            JSONObject result = new JSONObject();
+            result.put("code", AppHttpCodeEnum.NEED_LOGIN.getCode());
+            result.put("message", AppHttpCodeEnum.NEED_LOGIN.getMessage());
+            WebUtils.renderString(response, result.toJSONString());
+            return;
         }
 
         UserDetailsImpl loginUser = new UserDetailsImpl(user);
@@ -61,4 +74,5 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
 }
