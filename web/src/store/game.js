@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { reactive } from 'vue';
 
 export const useGameStore = defineStore('gameStore', () => {
     const gameMap = [];
@@ -12,12 +13,33 @@ export const useGameStore = defineStore('gameStore', () => {
         gameMap.push(tmp);
     }
 
+    let webSocket = null;
+    const opponent = reactive({
+        name: "",
+        avatar: "",
+        rating: "",
+    });
+
     function setChessPiece(x, y, value) {
         gameMap[x][y] = value;
     }
 
+    function setWebSocket(newWebSocket) {
+        webSocket = newWebSocket;
+    }
+
+    function setOpponent(newOpponent) {
+        opponent.name = newOpponent.name;
+        opponent.avatar = newOpponent.avatar;
+        opponent.rating = newOpponent.rating;
+    }
+
     return {
         gameMap,
+        opponent,
+        webSocket,
+        setWebSocket,
         setChessPiece,
+        setOpponent,
     }
 })

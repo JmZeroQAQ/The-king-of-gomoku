@@ -14,10 +14,10 @@ export const useUserStore = defineStore("userStore", () => {
     // 是否登录
     const isAuth = ref(false);
     // jwt令牌
-    let token = "";
+    const token = ref("");
 
     async function asyncGetInfo() {
-        const data = await getInfo(token);
+        const data = await getInfo(token.value);
         if(data.message === "success") {
             user.id = data.id;
             user.name = data.username;
@@ -38,7 +38,7 @@ export const useUserStore = defineStore("userStore", () => {
     }
 
     function setToken(new_token) {
-        token = new_token;
+        token.value = new_token;
     }
 
     function logout() {
@@ -48,7 +48,7 @@ export const useUserStore = defineStore("userStore", () => {
         user.rating = "";
 
         isAuth.value = false;
-        token = "";
+        token.value = "";
         removeToken();
     }
 
@@ -59,5 +59,6 @@ export const useUserStore = defineStore("userStore", () => {
         setIsAuth,
         setToken,
         logout,
+        token,
     }
 });
