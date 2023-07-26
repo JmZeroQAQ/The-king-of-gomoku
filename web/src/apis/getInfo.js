@@ -11,6 +11,9 @@ export const getInfo = (token) => {
             },
             success(resp) {
                 resolve(resp);
+            },
+            error() {
+                resolve({message: "需要登录后操作"});
             }
         });
     })

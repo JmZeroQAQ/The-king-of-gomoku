@@ -24,12 +24,12 @@ export const useUserStore = defineStore("userStore", () => {
             user.avatar = data.avatar;
             user.rating = data.rating;
         } else {
+            // 登录失效，localStorage清除失效的令牌
             if(data.code === 401) {
-                // 登录失效，localStorage清除失效的令牌
                 removeToken();
-                setIsAuth(false);
-                setToken("");
             }
+            setIsAuth(false);
+            setToken("");
         }
     }
 
