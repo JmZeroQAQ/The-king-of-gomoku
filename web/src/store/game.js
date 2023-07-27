@@ -1,31 +1,40 @@
 import { defineStore } from 'pinia';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 export const useGameStore = defineStore('gameStore', () => {
-    const gameMap = [];
-    // 初始化地图
-    // 1: 黑子, 2: 白子, 0: 空白
-    for(let i = 0; i < 12; i++) {
-        const tmp = [];
-        for(let j = 0; j < 12; j++) {
-            tmp.push(0);
-        }
-        gameMap.push(tmp);
-    }
+    const position = ref(-1);
+    const isUpdated = ref(false);
+    const color = ref("");
+    const gameStat = ref("idle"); // 三种状态: idle, running, over;
+    const winSet = ref(null);
 
-    let webSocket = null;
+    const webSocket = ref(null);
+
     const opponent = reactive({
         name: "",
         avatar: "",
         rating: "",
     });
 
-    function setChessPiece(x, y, value) {
-        gameMap[x][y] = value;
+    function setColor(newColor) {
+        color.value = newColor;
+    }
+
+    function setGameStat(newStat) {
+        gameStat.value = newStat;
+    }
+
+    function updatePosition(newPosition) {
+        position.value = newPosition;
+        isUpdated.value = true;
+    }
+
+    function setWinSet(newSet) {
+        winSet.value = newSet;
     }
 
     function setWebSocket(newWebSocket) {
-        webSocket = newWebSocket;
+        webSocket.value = newWebSocket;
     }
 
     function setOpponent(newOpponent) {
@@ -35,11 +44,18 @@ export const useGameStore = defineStore('gameStore', () => {
     }
 
     return {
-        gameMap,
         opponent,
         webSocket,
         setWebSocket,
-        setChessPiece,
+        updatePosition,
         setOpponent,
+        setColor,
+        isUpdated,
+        position,
+        color,
+        winSet,
+        setWinSet,
+        gameStat,
+        setGameStat,
     }
 })

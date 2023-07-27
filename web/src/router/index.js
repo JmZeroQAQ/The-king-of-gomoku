@@ -44,18 +44,6 @@ export const routes = [
     }],
   },
   {
-    path: "/match/",
-    component: BaseLayout,
-    children: [{
-        path: "",
-        component: () => import('@/views/game/MatchView.vue'),
-        meta: {
-          // 是否需要登录后才可以进入
-          isAuth: true,
-        }
-    }],
-  },
-  {
     path: "/login/",
     component: BaseLayout,
     children: [{

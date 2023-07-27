@@ -35,7 +35,7 @@ export class ChessPiece extends BaseGameObject {
         ctx.fill();
         
         // 当放置完棋子后在中心显示红点
-        if(this.currentStep === this.gameMap.step) {
+        if(this.currentStep === this.gameMap.step - 1) {
             ctx.fillStyle = "red";
             ctx.fillRect(drawX - scale * 0.1, drawY - scale * 0.1, scale * 0.2, scale * 0.2);
         }

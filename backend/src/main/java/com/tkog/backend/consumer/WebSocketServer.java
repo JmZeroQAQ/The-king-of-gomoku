@@ -1,6 +1,7 @@
 package com.tkog.backend.consumer;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.tkog.backend.consumer.utils.Game;
 import com.tkog.backend.consumer.utils.JwtAuthentication;
 import com.tkog.backend.consumer.utils.MatchingPool;
 import com.tkog.backend.mapper.UserMapper;
@@ -24,8 +25,9 @@ public class WebSocketServer {
 
     private User user;
     private Session session;
+    public Game game = null;
 
-    private static UserMapper userMapper;
+    public static UserMapper userMapper;
 
     public final static MatchingPool matchingPool = new MatchingPool();
 
@@ -82,8 +84,18 @@ public class WebSocketServer {
 
     // 发送对手信息
     public static void matchFound(Integer aUserId, Integer bUserId) {
+        // 将这局游戏和两名玩家绑定在一起
+        Game game = new Game(12, 12, 20, aUserId, bUserId);
+
+        users.get(aUserId).game = game;
+        users.get(bUserId).game = game;
+        game.createMap();
+        game.start();
+
         JSONObject resToA = getOpponentInfo(bUserId);
+        resToA.put("color", "black");
         JSONObject resToB = getOpponentInfo(aUserId);
+        resToB.put("color", "white");
 
         users.get(aUserId).sendMessage(resToA.toJSONString());
         users.get(bUserId).sendMessage(resToB.toJSONString());
@@ -95,12 +107,16 @@ public class WebSocketServer {
         System.out.println("receive message");
         JSONObject data = JSONObject.parseObject(message);
         String event = data.getString("event");
+
         if("start-matching".equals(event)) {
             startMatching();
         } else if("stop-matching".equals(event)) {
             stopMatching();
         } else if("move".equals(event)) {
-
+            if(this.game != null) {
+                final Integer nextPosition = (Integer) data.get("position");
+                this.game.setNextChessPosition(this.user.getId(), nextPosition);
+            }
         }
     }
 
