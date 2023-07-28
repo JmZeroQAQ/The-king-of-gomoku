@@ -21,6 +21,10 @@ export class GameMap extends BaseGameObject {
 
     // 棋盘中的棋子
     this.chessPieces = [];
+
+    // 棋子颜色
+    this.blackChessColor = "black";
+    this.whiteChessColor = "white";
   }
 
   addListeningEvents() {
@@ -53,6 +57,7 @@ export class GameMap extends BaseGameObject {
     this.addListeningEvents();
   }
 
+  // 实时更新棋盘大小
   udpate_size() {
     this.scale = parseInt(
       Math.min(
@@ -78,10 +83,40 @@ export class GameMap extends BaseGameObject {
       this.gameStore
     );
 
-    if(gameStat.value === "idle") return;
+    const { setGameStat, setIsUpdated } = this.gameStore;
 
-    if (gameStat.value === "over") {
-      gameStat.value = "idle";
+    if (gameStat.value === "running") {
+      if (isUpdated.value === true) {
+        // 表示已经读取过更新了
+        setIsUpdated(false);
+
+        const x = parseInt(position.value / this.cols);
+        const y = parseInt(position.value % this.cols);
+
+        // 更新黑色方棋子
+        if (this.step % 2 === 0) {
+          this.chessPieces.push(
+            new ChessPiece(
+              { x, y, color: this.blackChessColor, step: this.step },
+              this
+            )
+          );
+        } else {
+          // 更新白色方棋子
+          this.chessPieces.push(
+            new ChessPiece(
+              { x, y, color: this.whiteChessColor, step: this.step },
+              this
+            )
+          );
+        }
+
+        // 开始下一回合
+        this.step++;
+      }
+    } else if (gameStat.value === "over") {
+      setGameStat("idle");
+
       for (let i = 0; i < winSet.value.length; i++) {
         const x = parseInt(winSet.value[i] / this.cols);
         const y = parseInt(winSet.value[i] % this.cols);
@@ -91,26 +126,8 @@ export class GameMap extends BaseGameObject {
       }
 
       return;
-    }
-
-    if (isUpdated.value) {
-      // 表示已经读取过更新了
-      isUpdated.value = false;
-
-      const x = parseInt(position.value / this.cols);
-      const y = parseInt(position.value % this.cols);
-
-      if (this.step % 2 === 0) {
-        this.chessPieces.push(
-          new ChessPiece({ x, y, color: "black", step: this.step }, this)
-        );
-      } else {
-        this.chessPieces.push(
-          new ChessPiece({ x, y, color: "white", step: this.step }, this)
-        );
-      }
-
-      this.step++;
+    } else if (gameStat.value === "idle") {
+      return;
     }
   }
 
@@ -121,6 +138,7 @@ export class GameMap extends BaseGameObject {
     this.render();
   }
 
+  // 渲染棋盘
   render() {
     const color_even = "#eebe77",
       color_odd = "#f8e3c5";

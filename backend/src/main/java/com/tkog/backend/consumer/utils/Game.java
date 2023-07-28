@@ -6,6 +6,7 @@ import com.tkog.backend.pojo.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Game extends Thread {
@@ -13,6 +14,7 @@ public class Game extends Thread {
     private final Integer cols;
     // 选手每回合时间
     private final Integer waitTime;
+    private final String gameId;
 
     private Integer step = 0;
     // 游戏地图,0表示没有棋子,1表示白子,2表示黑子
@@ -32,12 +34,13 @@ public class Game extends Thread {
 
     public final ReentrantLock lock = new ReentrantLock();
 
-    public Game(Integer rows, Integer cols, Integer waitTime, Integer aUserId, Integer bUserId) {
+    public Game(Integer rows, Integer cols, Integer waitTime, String gameId, Integer aUserId, Integer bUserId) {
         this.rows = rows;
         this.cols = cols;
         this.aUserId = aUserId;
         this.bUserId = bUserId;
         this.waitTime = waitTime;
+        this.gameId = gameId;
 
         this.gameMap = new int[rows][cols];
     }
@@ -236,13 +239,19 @@ public class Game extends Thread {
     }
 
 
+    // 使用webSocket连接的时候必须要判断：1.连接是否存在 2.这个连接对应的游戏是否是当前这局游戏
+    private boolean checkConnection(WebSocketServer conn) {
+        return (conn != null) && Objects.equals(conn.gameId, this.gameId);
+    }
+
     private void sendAllMessage(String msg) {
         WebSocketServer aWebSocketServer = WebSocketServer.users.get(aUserId);
         WebSocketServer bWebSocketServer = WebSocketServer.users.get(bUserId);
-        if(aWebSocketServer != null && aWebSocketServer.game != null) {
+        // 发送信息前必须要判断连接是否存在，以及对局是否相同
+        if(checkConnection(aWebSocketServer)) {
             aWebSocketServer.sendMessage(msg);
         }
-        if(bWebSocketServer != null && bWebSocketServer.game != null) {
+        if(checkConnection(bWebSocketServer)) {
             bWebSocketServer.sendMessage(msg);
         }
     }
@@ -269,11 +278,14 @@ public class Game extends Thread {
     private void closeGame() {
         WebSocketServer aWebSocketServer = WebSocketServer.users.get(aUserId);
         WebSocketServer bWebSocketServer = WebSocketServer.users.get(bUserId);
-        if(aWebSocketServer != null) {
+
+        if(checkConnection(aWebSocketServer)) {
             aWebSocketServer.game = null;
+            aWebSocketServer.gameId = null;
         }
-        if(bWebSocketServer != null) {
+        if(checkConnection(bWebSocketServer)) {
             bWebSocketServer.game = null;
+            bWebSocketServer.gameId = null;
         }
     }
 

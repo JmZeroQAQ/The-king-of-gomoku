@@ -13,6 +13,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -26,6 +27,7 @@ public class WebSocketServer {
     private User user;
     private Session session;
     public Game game = null;
+    public String gameId = null;
 
     public static UserMapper userMapper;
 
@@ -84,11 +86,16 @@ public class WebSocketServer {
 
     // 发送对手信息
     public static void matchFound(Integer aUserId, Integer bUserId) {
+
+        String gameId = UUID.randomUUID().toString().substring(0, 8);
         // 将这局游戏和两名玩家绑定在一起
-        Game game = new Game(12, 12, 20, aUserId, bUserId);
+        Game game = new Game(12, 12, 20, gameId, aUserId, bUserId);
 
         users.get(aUserId).game = game;
+        users.get(aUserId).gameId = gameId;
+
         users.get(bUserId).game = game;
+        users.get(bUserId).gameId = gameId;
         game.createMap();
         game.start();
 

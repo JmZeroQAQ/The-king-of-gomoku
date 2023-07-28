@@ -6,6 +6,7 @@ export const useGameStore = defineStore('gameStore', () => {
     const isUpdated = ref(false);
     const color = ref("");
     const gameStat = ref("idle"); // 三种状态: idle, running, over;
+    // 存储获胜的棋子
     const winSet = ref(null);
 
     const webSocket = ref(null);
@@ -15,6 +16,12 @@ export const useGameStore = defineStore('gameStore', () => {
         avatar: "",
         rating: "",
     });
+
+    const loserName = ref("");
+
+    function setLoserName(newName) {
+        loserName.value = newName;
+    }
 
     function setColor(newColor) {
         color.value = newColor;
@@ -43,6 +50,10 @@ export const useGameStore = defineStore('gameStore', () => {
         opponent.rating = newOpponent.rating;
     }
 
+    function setIsUpdated(flag) {
+        isUpdated.value = flag;
+    }
+
     return {
         opponent,
         webSocket,
@@ -57,5 +68,8 @@ export const useGameStore = defineStore('gameStore', () => {
         setWinSet,
         gameStat,
         setGameStat,
+        setIsUpdated,
+        loserName,
+        setLoserName,
     }
 })

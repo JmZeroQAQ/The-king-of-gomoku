@@ -3,6 +3,7 @@
     <el-col :span="12">
       <GameMap v-if="currentComponent === 'game'" />
       <MatchGround v-else-if="currentComponent === 'match'" />
+      <ResultBoard v-else />
     </el-col>
   </el-row>
 </template>
@@ -10,6 +11,7 @@
 <script setup>
 import GameMap from "@/components/GameMap.vue";
 import MatchGround from "@/components/MatchGround.vue";
+import ResultBoard from '@/components/ResultBoard.vue';
 
 import { useUserStore } from "@/store/user";
 import { storeToRefs } from "pinia";
@@ -28,9 +30,8 @@ const {
   updatePosition,
   setWinSet,
   setGameStat,
+  setLoserName,
 } = gameStore;
-
-const { gameStat } = storeToRefs(gameStore);
 
 let webSocket = null;
 
@@ -53,23 +54,26 @@ onMounted(() => {
   webSocket.onmessage = (msg) => {
     const data = JSON.parse(msg.data);
     console.log(data);
-    console.log(gameStat.value);
 
     if (data.event === "match-found") {
       setOpponent(data);
       setColor(data.color);
       setGameStat("running");
 
+      // 1.2s后跳转到游戏界面
       setTimeout(() => {
         currentComponent.value = "game";
       }, 1200);
-    } else if (data.event === "move" && gameStat.value === "running") {
-        console.log("123");
+
+    } else if (data.event === "move") {
       updatePosition(data.newPosition);
-    } else if (data.event === "result" && gameStat.value === "running") {
+    } else if (data.event === "result") {
       // 保存 造成胜利棋子的集合
+      setLoserName(data.name);
       setWinSet(data.winSet);
       setGameStat("over");
+
+      currentComponent.value = "result";
     }
   };
 });
