@@ -11,8 +11,8 @@ export class GameMap extends BaseGameObject {
     // 单位长度
     this.scale = 0;
     // 棋盘大小
-    this.rows = 12;
-    this.cols = 12;
+    this.rows = 15;
+    this.cols = 15;
 
     // 步数, 偶数步为黑子回合,奇数步为白子回合
     this.step = 0;

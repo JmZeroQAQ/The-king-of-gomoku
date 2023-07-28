@@ -89,7 +89,7 @@ public class WebSocketServer {
 
         String gameId = UUID.randomUUID().toString().substring(0, 8);
         // 将这局游戏和两名玩家绑定在一起
-        Game game = new Game(12, 12, 20, gameId, aUserId, bUserId);
+        Game game = new Game(15, 15, 20, gameId, aUserId, bUserId);
 
         users.get(aUserId).game = game;
         users.get(aUserId).gameId = gameId;
