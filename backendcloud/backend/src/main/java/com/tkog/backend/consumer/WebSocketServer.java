@@ -3,11 +3,13 @@ package com.tkog.backend.consumer;
 import com.alibaba.fastjson2.JSONObject;
 import com.tkog.backend.consumer.utils.Game;
 import com.tkog.backend.consumer.utils.JwtAuthentication;
-import com.tkog.backend.consumer.utils.MatchingPool;
 import com.tkog.backend.mapper.UserMapper;
 import com.tkog.backend.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -29,13 +31,20 @@ public class WebSocketServer {
     public Game game = null;
     public String gameId = null;
 
-    public static UserMapper userMapper;
+    private final static String addPlayerUrl = "http://127.0.0.1:3001/match/add/";
+    private final static String removePlayerUrl = "http://127.0.0.1:3001/match/remove/";
 
-    public final static MatchingPool matchingPool = new MatchingPool();
+    public static UserMapper userMapper;
+    public static RestTemplate restTemplate;
 
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         WebSocketServer.userMapper = userMapper;
+    }
+
+    @Autowired
+    public void setRestTemplate(RestTemplate restTemplate) {
+        WebSocketServer.restTemplate = restTemplate;
     }
 
     @OnOpen
@@ -64,13 +73,17 @@ public class WebSocketServer {
 
     private void startMatching() {
         System.out.println("start matching");
-        matchingPool.addPlayer(this.user.getId(), this.user.getRating());
-
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+        data.set("user_id", this.user.getId().toString());
+        data.set("rating", this.user.getRating().toString());
+        restTemplate.postForObject(addPlayerUrl, data, String.class);
     }
 
     private void stopMatching() {
         System.out.println("stop matching");
-        matchingPool.removePlayer(this.user.getId());
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+        data.set("user_id", this.user.getId().toString());
+        restTemplate.postForObject(removePlayerUrl, data, String.class);
     }
 
     private static JSONObject getOpponentInfo(Integer userId) {
