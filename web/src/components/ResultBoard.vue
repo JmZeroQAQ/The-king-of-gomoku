@@ -1,6 +1,6 @@
 <template>
     <el-card>
-        <div class="content">{{ loserName === user.name ? 'Lose' : 'Win' }}</div>
+        <div class="content">{{ winner === user.name ? 'Win' : 'Loser' }}</div>
     </el-card>
 </template>
 
@@ -12,7 +12,7 @@ import { storeToRefs } from 'pinia';
 
 const gameStore = useGameStore();
 const userStore = useUserStore();
-const { loserName } = storeToRefs(gameStore);
+const { winner } = storeToRefs(gameStore);
 const { user } = storeToRefs(userStore);
 
 </script>

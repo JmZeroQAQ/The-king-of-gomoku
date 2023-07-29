@@ -37,6 +37,7 @@ public class WebSocketServer {
     public static UserMapper userMapper;
     public static RestTemplate restTemplate;
 
+
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         WebSocketServer.userMapper = userMapper;

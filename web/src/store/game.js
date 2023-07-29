@@ -17,10 +17,10 @@ export const useGameStore = defineStore('gameStore', () => {
         rating: "",
     });
 
-    const loserName = ref("");
+    const winner = ref("");
 
-    function setLoserName(newName) {
-        loserName.value = newName;
+    function setWinner(newName) {
+        winner.value = newName;
     }
 
     function setColor(newColor) {
@@ -69,7 +69,7 @@ export const useGameStore = defineStore('gameStore', () => {
         gameStat,
         setGameStat,
         setIsUpdated,
-        loserName,
-        setLoserName,
+        winner,
+        setWinner,
     }
 })

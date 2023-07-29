@@ -30,7 +30,7 @@ const {
   updatePosition,
   setWinSet,
   setGameStat,
-  setLoserName,
+  setWinner,
 } = gameStore;
 
 let webSocket = null;
@@ -69,11 +69,13 @@ onMounted(() => {
       updatePosition(data.newPosition);
     } else if (data.event === "result") {
       // 保存 造成胜利棋子的集合
-      setLoserName(data.name);
+      setWinner(data.name);
       setWinSet(data.winSet);
       setGameStat("over");
 
-      currentComponent.value = "result";
+      setTimeout(() => {
+        currentComponent.value = "result";
+      }, 1200);
     }
   };
 });

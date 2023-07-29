@@ -25,7 +25,7 @@ public class Game extends Thread {
     // b是白子,后手下棋
     private final Integer bUserId;
 
-    private Integer loserUserId = -1;
+    private Integer winnerId = -1;
 
     private final List<Integer> winChessPieces = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class Game extends Thread {
 
     // true表示游戏结束
     private boolean isGameOver() {
-        return this.loserUserId != -1;
+        return this.winnerId != -1;
     }
 
     // 判断落子的合法性
@@ -124,7 +124,7 @@ public class Game extends Thread {
         }
 
         // 走到这里说明玩家在规定时间内没有响应
-        this.loserUserId = this.aUserId;
+        this.winnerId = this.bUserId;
     }
 
     private void getBChessPiece() {
@@ -150,7 +150,7 @@ public class Game extends Thread {
         }
 
         // 走到这里说明玩家在规定时间内没有响应
-        this.loserUserId = this.bUserId;
+        this.winnerId = this.aUserId;
     }
 
     // 检查局面
@@ -231,7 +231,9 @@ public class Game extends Thread {
         }
 
         if(loserId != -1) {
-            this.loserUserId = loserId;
+            if(loserId.equals(this.aUserId)) this.winnerId = this.bUserId;
+            else this.winnerId = this.aUserId;
+
             for(int i = 0; i < this.rows; i++)
                 for(int j = 0; j < this.cols; j++)
                     if(used[i][j]) this.winChessPieces.add(this.cols * i + j);
@@ -266,10 +268,10 @@ public class Game extends Thread {
 
     private void sendResult() {
         JSONObject resp = new JSONObject();
-        User loser = WebSocketServer.userMapper.selectById(loserUserId);
+        User winner = WebSocketServer.userMapper.selectById(winnerId);
 
         resp.put("event", "result");
-        resp.put("name", loser.getUsername());
+        resp.put("name", winner.getUsername());
         resp.put("winSet", this.winChessPieces.toArray());
 
         sendAllMessage(resp.toJSONString());

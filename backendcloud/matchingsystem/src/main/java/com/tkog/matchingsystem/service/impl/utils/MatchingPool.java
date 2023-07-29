@@ -64,7 +64,6 @@ public class MatchingPool extends Thread {
     // 匹配成功
     private void matchFound(Integer aUserId, Integer bUserId) {
         // 匹配成功
-        System.out.println("matchFound");
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
         data.set("a_id", aUserId.toString());
         data.set("b_id", bUserId.toString());
