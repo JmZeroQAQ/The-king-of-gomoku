@@ -2,9 +2,11 @@ package com.tkog.backend.consumer.utils;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.tkog.backend.consumer.WebSocketServer;
+import com.tkog.backend.pojo.Record;
 import com.tkog.backend.pojo.User;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
@@ -28,6 +30,9 @@ public class Game extends Thread {
     private Integer winnerId = -1;
 
     private final List<Integer> winChessPieces = new ArrayList<>();
+
+    // 存储历史步数
+    private final List<Integer> historySteps = new ArrayList<>();
 
     private Integer aNextChessPosition = -1;
     private Integer bNextChessPosition = -1;
@@ -102,6 +107,10 @@ public class Game extends Thread {
         return this.gameMap[x][y] == 0;
     }
 
+    private void addStepToHistorySteps(Integer step) {
+        historySteps.add(step);
+    }
+
     private void getAChessPiece() {
         for(int i = 0; i < this.waitTime * 10; i++) {
             try {
@@ -112,6 +121,7 @@ public class Game extends Thread {
                         // value: 1 表示白子, 2 表示黑子
                         // a是黑子玩家,所以使用黑子
                         setGameMap(aNextChessPosition, 2);
+                        addStepToHistorySteps(aNextChessPosition);
                         sendMoveMessage(aNextChessPosition);
                         setANextChessPosition(-1);
                         return;
@@ -137,6 +147,7 @@ public class Game extends Thread {
                         // value: 1 表示白子, 2 表示黑子
                         // b是白子玩家,所以使用白子
                         setGameMap(bNextChessPosition, 1);
+                        addStepToHistorySteps(bNextChessPosition);
                         // 广播新的位置信息
                         sendMoveMessage(bNextChessPosition);
                         setBNextChessPosition(-1);
@@ -266,6 +277,35 @@ public class Game extends Thread {
         sendAllMessage(resp.toJSONString());
     }
 
+    private void updateUserRating(Integer userId, Integer rating) {
+        User user = WebSocketServer.userMapper.selectById(userId);
+        user.setRating(user.getRating() + rating);
+
+        WebSocketServer.userMapper.updateById(user);
+    }
+
+    private void saveToDatabase() {
+        if(winnerId.equals(aUserId)) {
+            updateUserRating(aUserId, 10);
+            updateUserRating(bUserId, -5);
+        } else {
+            updateUserRating(bUserId, 10);
+            updateUserRating(aUserId, -5);
+        }
+
+        Record record = new Record(
+                null,
+                aUserId,
+                bUserId,
+                winnerId,
+                new Date(),
+                historySteps.toString(),
+                winChessPieces.toString()
+        );
+
+        WebSocketServer.recordMapper.insert(record);
+    }
+
     private void sendResult() {
         JSONObject resp = new JSONObject();
         User winner = WebSocketServer.userMapper.selectById(winnerId);
@@ -303,7 +343,10 @@ public class Game extends Thread {
             checkSituation();
             // 判断游戏是否结束
             if(isGameOver()) {
+                // 发送游戏结果
                 sendResult();
+                // 将结果保存到数库
+                saveToDatabase();
                 // 关闭游戏
                 closeGame();
                 break;

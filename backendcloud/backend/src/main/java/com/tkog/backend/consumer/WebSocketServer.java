@@ -3,6 +3,7 @@ package com.tkog.backend.consumer;
 import com.alibaba.fastjson2.JSONObject;
 import com.tkog.backend.consumer.utils.Game;
 import com.tkog.backend.consumer.utils.JwtAuthentication;
+import com.tkog.backend.mapper.RecordMapper;
 import com.tkog.backend.mapper.UserMapper;
 import com.tkog.backend.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class WebSocketServer {
     private final static String removePlayerUrl = "http://127.0.0.1:3001/match/remove/";
 
     public static UserMapper userMapper;
+    public static RecordMapper recordMapper;
+
     public static RestTemplate restTemplate;
 
 
@@ -46,6 +49,11 @@ public class WebSocketServer {
     @Autowired
     public void setRestTemplate(RestTemplate restTemplate) {
         WebSocketServer.restTemplate = restTemplate;
+    }
+
+    @Autowired
+    public void setRecordMapper(RecordMapper recordMapper) {
+        WebSocketServer.recordMapper = recordMapper;
     }
 
     @OnOpen
