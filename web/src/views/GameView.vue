@@ -1,9 +1,15 @@
 <template>
   <el-row justify="center">
-    <el-col :span="12">
-      <GameMap v-if="currentComponent === 'game'" />
+    <el-col :span="18">
+      <GameMap
+        v-if="currentComponent === 'game'"
+        :current_step="current_step"
+      />
       <MatchGround v-else-if="currentComponent === 'match'" />
-      <ResultBoard v-else />
+      <ResultBoard
+        v-else-if="currentComponent === 'result'"
+        @resetGame="resetGame"
+      />
     </el-col>
   </el-row>
 </template>
@@ -11,7 +17,7 @@
 <script setup>
 import GameMap from "@/components/GameMap.vue";
 import MatchGround from "@/components/MatchGround.vue";
-import ResultBoard from '@/components/ResultBoard.vue';
+import ResultBoard from "@/components/ResultBoard.vue";
 
 import { useUserStore } from "@/store/user";
 import { storeToRefs } from "pinia";
@@ -33,9 +39,15 @@ const {
   setWinner,
 } = gameStore;
 
+function resetGame() {
+  currentComponent.value = "match";
+  current_step.value = 0;
+}
+
 let webSocket = null;
 
 const currentComponent = ref("match");
+const current_step = ref(0);
 
 onMounted(() => {
   const webSocketUrl = WEB_SOCKET_URL + token.value + "/";
@@ -64,9 +76,9 @@ onMounted(() => {
       setTimeout(() => {
         currentComponent.value = "game";
       }, 1200);
-
     } else if (data.event === "move") {
       updatePosition(data.newPosition);
+      current_step.value++;
     } else if (data.event === "result") {
       // 保存 造成胜利棋子的集合
       setWinner(data.name);

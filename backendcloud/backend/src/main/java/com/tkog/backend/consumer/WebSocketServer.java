@@ -112,22 +112,28 @@ public class WebSocketServer {
         String gameId = UUID.randomUUID().toString().substring(0, 8);
         // 将这局游戏和两名玩家绑定在一起
         Game game = new Game(15, 15, 20, gameId, aUserId, bUserId);
-
-        users.get(aUserId).game = game;
-        users.get(aUserId).gameId = gameId;
-
-        users.get(bUserId).game = game;
-        users.get(bUserId).gameId = gameId;
         game.createMap();
         game.start();
 
-        JSONObject resToA = getOpponentInfo(bUserId);
-        resToA.put("color", "black");
-        JSONObject resToB = getOpponentInfo(aUserId);
-        resToB.put("color", "white");
+        if(users.get(aUserId) != null) {
+            users.get(aUserId).game = game;
+            users.get(aUserId).gameId = gameId;
 
-        users.get(aUserId).sendMessage(resToA.toJSONString());
-        users.get(bUserId).sendMessage(resToB.toJSONString());
+            JSONObject resToA = getOpponentInfo(bUserId);
+            resToA.put("color", "black");
+
+            users.get(aUserId).sendMessage(resToA.toJSONString());
+        }
+
+        if(users.get(bUserId) != null) {
+            users.get(bUserId).game = game;
+            users.get(bUserId).gameId = gameId;
+
+            JSONObject resToB = getOpponentInfo(aUserId);
+            resToB.put("color", "white");
+
+            users.get(bUserId).sendMessage(resToB.toJSONString());
+        }
     }
 
 

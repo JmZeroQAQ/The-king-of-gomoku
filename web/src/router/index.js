@@ -11,7 +11,7 @@ export const routes = [
     component: BaseLayout,
     children: [{
         path: "",
-        component: () => import('@/views/home/HomeView.vue'),
+        component: () => import('@/views/HomeView.vue'),
         name: "home",
         meta: {
           // 是否需要登录后才可以进入
@@ -24,7 +24,31 @@ export const routes = [
     component: BaseLayout,
     children: [{
         path: "",
-        component: () => import('@/views/game/GameView.vue'),
+        component: () => import('@/views/GameView.vue'),
+        meta: {
+          // 是否需要登录
+          isAuth: true,
+        }
+    }],
+  },
+  {
+    path: "/record/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/RecordView.vue'),
+        meta: {
+          // 是否需要登录
+          isAuth: true,
+        }
+    }],
+  },
+  {
+    path: "/ranklist/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/RanklistView.vue'),
         meta: {
           // 是否需要登录
           isAuth: true,
@@ -36,7 +60,7 @@ export const routes = [
     component: BaseLayout,
     children: [{
         path: "",
-        component: () => import('@/views/profile/ProfileView.vue'),
+        component: () => import('@/views/ProfileView.vue'),
         meta: {
           // 是否需要登录后才可以进入
           isAuth: true,
@@ -48,7 +72,7 @@ export const routes = [
     component: BaseLayout,
     children: [{
         path: "",
-        component: () => import('@/views/login/LoginView.vue'),
+        component: () => import('@/views/LoginView.vue'),
         meta: {
           // 是否需要登录后才可以进入
           isAuth: false,
@@ -60,7 +84,7 @@ export const routes = [
     component: BaseLayout,
     children: [{
         path: "",
-        component: () => import('@/views/404/NotFoundView.vue'),
+        component: () => import('@/views/NotFoundView.vue'),
         meta: {
           // 是否需要登录后才可以进入
           isAuth: false,

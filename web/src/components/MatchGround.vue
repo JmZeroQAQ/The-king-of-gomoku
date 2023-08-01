@@ -1,34 +1,39 @@
 <template>
-  <el-card>
-    <div class="user-body">
-      <div class="self">
-        <img class="user-image" :src="user.avatar" alt="" />
-        <div class="user-name">
-          {{ user.name }}
+  <div class="match-container">
+    <el-card>
+      <div class="user-body">
+        <div class="self">
+          <img class="user-image" :src="user.avatar" alt="" />
+          <div class="user-name">
+            {{ user.name }}
+          </div>
+        </div>
+        <div class="message">
+          <h1>PK</h1>
+        </div>
+        <div class="opponent">
+          <img
+            class="user-image"
+            :src="gameStat === 'running' ? opponent.avatar : anonymousImage"
+            alt=""
+          />
+          <div class="user-name">
+            {{ gameStat === 'running' ? opponent.name : "???"}}
+          </div>
         </div>
       </div>
-      <div class="message">
-        <h1>PK</h1>
-      </div>
-      <div class="opponent">
-        <img class="user-image" :src="anonymousImage" alt="" />
-        <div class="user-name">
-          {{ opponent.name }}
+      <div class="footer">
+        <div class="button-container">
+          <el-button @click="matchEvent" type="primary">{{
+            matchInfo
+          }}</el-button>
         </div>
       </div>
-    </div>
-    <div class="footer">
-      <div class="button-container">
-        <el-button @click="matchEvent" type="primary">{{
-          matchInfo
-        }}</el-button>
-      </div>
-    </div>
-  </el-card>
+    </el-card>
+  </div>
 </template>
 
 <script setup>
-
 import anonymousImage from "@/assets/images/anonymous.png";
 import { ref } from "vue";
 import { useGameStore } from "@/store/game";
@@ -39,7 +44,7 @@ const userStore = useUserStore();
 const { user } = userStore;
 
 const gameStore = useGameStore();
-const { webSocket, opponent } = storeToRefs(gameStore);
+const { webSocket, opponent, gameStat } = storeToRefs(gameStore);
 
 const matchInfo = ref("开始匹配");
 function matchEvent() {
@@ -62,6 +67,17 @@ function matchEvent() {
 </script>
 
 <style lang="scss" scoped>
+.match-container {
+  width: 100%;
+  height: 75vh;
+  display: flex;
+  align-items: center;
+}
+
+.el-card {
+  width: 100%;
+  background-color: rgba($color: #fff, $alpha: 0.1);
+}
 
 .user-body {
   display: flex;

@@ -34,6 +34,7 @@ export class GameMap extends BaseGameObject {
     this.ctx.canvas.addEventListener("click", (e) => {
       const x = parseInt(e.offsetY / this.scale);
       const y = parseInt(e.offsetX / this.scale);
+      console.log("x: " + x + " y: " + y);
 
       if (color.value === "black" && this.step % 2 === 0) {
         webSocket.value.send(
@@ -156,6 +157,12 @@ export class GameMap extends BaseGameObject {
           this.scale
         );
       }
+    }
+  }
+
+  onDestroy() {
+    for(const chess of this.chessPieces) {
+      chess.destroy();
     }
   }
 }

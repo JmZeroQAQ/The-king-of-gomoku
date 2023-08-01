@@ -8,6 +8,9 @@
       :router="true"
     >
       <el-menu-item index="/home/" class="logo">TOKG</el-menu-item>
+      <el-menu-item index="/game/" class="nav-item">游戏</el-menu-item>
+      <el-menu-item index="/ranklist/" class="nav-item">排行榜</el-menu-item>
+      <el-menu-item index="/record/" class="nav-item">回放</el-menu-item>
       <div class="flex-grow" />
       <el-sub-menu v-if="isAuth"  index="1">
         <template #title>
@@ -51,13 +54,18 @@ const handleSelect = (key, keyPath) => {
     color: #409EFF;
 }
 
+.nav-item {
+  color: #303133;
+}
+
 .username {
   font-weight: 600;
-  color: #303133;
+  color: #409EFF;
 }
 
 .login {
   font-size: 16px;
   font-weight: 600;
+  color: #409EFF;
 }
 </style>
