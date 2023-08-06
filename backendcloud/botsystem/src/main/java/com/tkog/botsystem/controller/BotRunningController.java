@@ -18,9 +18,8 @@ public class BotRunningController {
         Integer userId = Integer.parseInt(Objects.requireNonNull(data.getFirst("user_id")));
         String botCode = data.getFirst("bot_code");
         String input = data.getFirst("input");
-        Integer color = Integer.parseInt(Objects.requireNonNull(data.getFirst("color")));
 
-        return botRunningService.addBot(userId, botCode, input, color);
+        return botRunningService.addBot(userId, botCode, input);
     }
     
 }

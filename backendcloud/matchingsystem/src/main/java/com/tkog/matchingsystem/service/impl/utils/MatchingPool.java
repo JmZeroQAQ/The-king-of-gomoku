@@ -24,10 +24,10 @@ public class MatchingPool extends Thread {
         MatchingPool.restTemplate = restTemplate;
     }
 
-    public void addPlayer(Integer userId, Integer rating) {
+    public void addPlayer(Integer userId, Integer rating, Integer botId) {
         lock.lock();
         try {
-            players.add(new Player(userId, rating, 0));
+            players.add(new Player(userId, rating, 0, botId));
         } finally {
             lock.unlock();
         }
@@ -62,11 +62,14 @@ public class MatchingPool extends Thread {
     }
 
     // 匹配成功
-    private void matchFound(Integer aUserId, Integer bUserId) {
+    private void matchFound(Player aUser, Player bUser) {
         // 匹配成功
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
-        data.set("a_id", aUserId.toString());
-        data.set("b_id", bUserId.toString());
+        data.set("aId", aUser.getUserId().toString());
+        data.set("aBotId", aUser.getBotId().toString());
+        data.set("bId", bUser.getUserId().toString());
+        data.set("bBotId", bUser.getBotId().toString());
+
         restTemplate.postForObject(startGameUrl, data, String.class);
     }
 
@@ -80,7 +83,7 @@ public class MatchingPool extends Thread {
                 Player aPlayer = players.get(i), bPlayer = players.get(j);
                 if(checkMatched(aPlayer, bPlayer)) {
                     used[i] = used[j] = true;
-                    matchFound(aPlayer.getUserId(), bPlayer.getUserId());
+                    matchFound(aPlayer, bPlayer);
                     break;
                 }
             }

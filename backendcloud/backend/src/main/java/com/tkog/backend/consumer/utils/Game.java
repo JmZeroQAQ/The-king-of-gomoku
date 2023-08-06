@@ -4,6 +4,8 @@ import com.alibaba.fastjson2.JSONObject;
 import com.tkog.backend.consumer.WebSocketServer;
 import com.tkog.backend.pojo.Record;
 import com.tkog.backend.pojo.User;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +31,10 @@ public class Game extends Thread {
 
     private Integer winnerId = -1;
 
+    // botId: -1表示玩家出手
+    private final Integer aBotId;
+    private final Integer bBotId;
+
     private final List<Integer> winChessPieces = new ArrayList<>();
 
     // 存储历史步数
@@ -39,13 +45,19 @@ public class Game extends Thread {
 
     public final ReentrantLock lock = new ReentrantLock();
 
-    public Game(Integer rows, Integer cols, Integer waitTime, String gameId, Integer aUserId, Integer bUserId) {
+    public Game(
+            Integer rows, Integer cols, Integer waitTime,
+            String gameId, Integer aUserId, Integer bUserId,
+            Integer aBotId, Integer bBotId
+    ) {
         this.rows = rows;
         this.cols = cols;
         this.aUserId = aUserId;
         this.bUserId = bUserId;
         this.waitTime = waitTime;
         this.gameId = gameId;
+        this.aBotId = aBotId;
+        this.bBotId = bBotId;
 
         this.gameMap = new int[rows][cols];
     }
@@ -111,7 +123,50 @@ public class Game extends Thread {
         historySteps.add(step);
     }
 
+    private String getMap() {
+        StringBuilder res = new StringBuilder();
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++) {
+                res.append(gameMap[i][j]);
+                res.append(" ");
+            }
+            res.append("\n");
+        }
+
+        return res.toString();
+    }
+
+    private String getInput(Integer userId) {
+        StringBuilder res = new StringBuilder();
+        // 0表示黑子, 1表示白子
+        if(aUserId.equals(userId)) res.append(0);
+        else res.append(1);
+        res.append("\n");
+        res.append(rows);
+        res.append(" ");
+        res.append(cols);
+        res.append("\n");
+        res.append(getMap());
+
+        return res.toString();
+    }
+
+    private void sendRunningBotRequest(Integer userId, Integer botId) {
+        if(botId.equals(-1)) return;
+
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+
+        data.set("userId", userId.toString());
+        data.set("input", getInput(userId));
+        data.set("botCode", WebSocketServer.botMapper.selectById(botId).getContent());
+
+        WebSocketServer.sendBotRunningRequest(data);
+
+    }
+
     private void getAChessPiece() {
+        sendRunningBotRequest(aUserId, aBotId);
+
         for(int i = 0; i < this.waitTime * 10; i++) {
             try {
                 Thread.sleep(100);
@@ -138,6 +193,8 @@ public class Game extends Thread {
     }
 
     private void getBChessPiece() {
+        sendRunningBotRequest(bUserId, bBotId);
+
         for(int i = 0; i < this.waitTime * 10; i++) {
             try {
                 Thread.sleep(100);

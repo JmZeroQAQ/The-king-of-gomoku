@@ -3,6 +3,7 @@ package com.tkog.backend.consumer;
 import com.alibaba.fastjson2.JSONObject;
 import com.tkog.backend.consumer.utils.Game;
 import com.tkog.backend.consumer.utils.JwtAuthentication;
+import com.tkog.backend.mapper.BotMapper;
 import com.tkog.backend.mapper.RecordMapper;
 import com.tkog.backend.mapper.UserMapper;
 import com.tkog.backend.pojo.User;
@@ -34,9 +35,11 @@ public class WebSocketServer {
 
     private final static String addPlayerUrl = "http://127.0.0.1:3001/match/add/";
     private final static String removePlayerUrl = "http://127.0.0.1:3001/match/remove/";
+    private final static String runningBotUrl = "http://127.0.0.1:3001/bot/add/";
 
     public static UserMapper userMapper;
     public static RecordMapper recordMapper;
+    public static BotMapper botMapper;
 
     public static RestTemplate restTemplate;
 
@@ -54,6 +57,11 @@ public class WebSocketServer {
     @Autowired
     public void setRecordMapper(RecordMapper recordMapper) {
         WebSocketServer.recordMapper = recordMapper;
+    }
+
+    @Autowired
+    public void setBotMapper(BotMapper botMapper) {
+        WebSocketServer.botMapper = botMapper;
     }
 
     @OnOpen
@@ -80,18 +88,20 @@ public class WebSocketServer {
         }
     }
 
-    private void startMatching() {
+    private void startMatching(Integer botId) {
+        botId = -1;
         System.out.println("start matching");
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
-        data.set("user_id", this.user.getId().toString());
+        data.set("userId", this.user.getId().toString());
         data.set("rating", this.user.getRating().toString());
+        data.set("botId", botId.toString());
         restTemplate.postForObject(addPlayerUrl, data, String.class);
     }
 
     private void stopMatching() {
         System.out.println("stop matching");
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
-        data.set("user_id", this.user.getId().toString());
+        data.set("userId", this.user.getId().toString());
         restTemplate.postForObject(removePlayerUrl, data, String.class);
     }
 
@@ -106,33 +116,43 @@ public class WebSocketServer {
         return res;
     }
 
+    // 发送执行bot代码的请求
+    public static void sendBotRunningRequest(MultiValueMap<String, String> data) {
+        restTemplate.postForObject(runningBotUrl, data, String.class);
+    }
+
     // 发送对手信息
-    public static void matchFound(Integer aUserId, Integer bUserId) {
+    public static void matchFound(Integer aUserId, Integer bUserId, Integer aBotId, Integer bBotId) {
 
         String gameId = UUID.randomUUID().toString().substring(0, 8);
         // 将这局游戏和两名玩家绑定在一起
-        Game game = new Game(15, 15, 20, gameId, aUserId, bUserId);
+        Game game = new Game(
+                15, 15, 20, gameId, aUserId, bUserId,
+                aBotId, bBotId
+        );
         game.createMap();
         game.start();
 
         if(users.get(aUserId) != null) {
-            users.get(aUserId).game = game;
-            users.get(aUserId).gameId = gameId;
+            WebSocketServer conn = users.get(aUserId);
+            conn.game = game;
+            conn.gameId = gameId;
 
             JSONObject resToA = getOpponentInfo(bUserId);
             resToA.put("color", "black");
 
-            users.get(aUserId).sendMessage(resToA.toJSONString());
+            conn.sendMessage(resToA.toJSONString());
         }
 
         if(users.get(bUserId) != null) {
-            users.get(bUserId).game = game;
-            users.get(bUserId).gameId = gameId;
+            WebSocketServer conn = users.get(bUserId);
+            conn.game = game;
+            conn.gameId = gameId;
 
             JSONObject resToB = getOpponentInfo(aUserId);
             resToB.put("color", "white");
 
-            users.get(bUserId).sendMessage(resToB.toJSONString());
+            conn.sendMessage(resToB.toJSONString());
         }
     }
 
@@ -144,7 +164,8 @@ public class WebSocketServer {
         String event = data.getString("event");
 
         if("start-matching".equals(event)) {
-            startMatching();
+            Integer botId = data.getInteger("bot_id");
+            startMatching(botId);
         } else if("stop-matching".equals(event)) {
             stopMatching();
         } else if("move".equals(event)) {
