@@ -1,6 +1,7 @@
 package com.tkog.backend.service.impl.user;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.tkog.backend.enums.AppHttpCodeEnum;
 import com.tkog.backend.pojo.User;
 import com.tkog.backend.service.user.GetInfoService;
 import com.tkog.backend.utils.GetUser;
@@ -14,7 +15,8 @@ public class GetInfoServiceImpl implements GetInfoService {
         JSONObject resp = new JSONObject();
 
         if(user == null) {
-            resp.put("message", "403");
+            resp.put("code", AppHttpCodeEnum.NO_OPERATOR_AUTH.getCode());
+            resp.put("message", AppHttpCodeEnum.NO_OPERATOR_AUTH.getMessage());
             return resp;
         }
 

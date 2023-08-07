@@ -35,7 +35,7 @@ public class WebSocketServer {
 
     private final static String addPlayerUrl = "http://127.0.0.1:3001/match/add/";
     private final static String removePlayerUrl = "http://127.0.0.1:3001/match/remove/";
-    private final static String runningBotUrl = "http://127.0.0.1:3001/bot/add/";
+    private final static String runningBotUrl = "http://127.0.0.1:3002/bot/add/";
 
     public static UserMapper userMapper;
     public static RecordMapper recordMapper;

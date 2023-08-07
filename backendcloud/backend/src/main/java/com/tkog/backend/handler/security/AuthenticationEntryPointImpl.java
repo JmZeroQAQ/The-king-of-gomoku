@@ -1,6 +1,7 @@
 package com.tkog.backend.handler.security;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.tkog.backend.enums.AppHttpCodeEnum;
 import com.tkog.backend.utils.WebUtils;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -17,14 +18,14 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
         JSONObject result = new JSONObject();
         if(authException instanceof InsufficientAuthenticationException) {
-            result.put("code", 401);
-            result.put("message", "用户未登录");
+            result.put("code", AppHttpCodeEnum.NEED_LOGIN.getCode());
+            result.put("message", AppHttpCodeEnum.NEED_LOGIN.getMessage());
         } else if(authException instanceof BadCredentialsException) {
-            result.put("code", 504);
-            result.put("message", "用户名或者密码错误");
+            result.put("code", AppHttpCodeEnum.LOGIN_ERROR.getCode());
+            result.put("message", AppHttpCodeEnum.LOGIN_ERROR.getMessage());
         } else {
-            result.put("code", 500);
-            result.put("message", "服务器错误");
+            result.put("code", AppHttpCodeEnum.SYSTEM_ERROR.getCode());
+            result.put("message", AppHttpCodeEnum.SYSTEM_ERROR.getMessage());
         }
 
         WebUtils.renderString(response, result.toJSONString());
