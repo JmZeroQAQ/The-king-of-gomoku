@@ -3,6 +3,7 @@ import '@/assets/reset.scss'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/dist/index.css'
+
 import App from './App.vue'
 import router from './router/index'; //导入路由
 import { createPinia } from 'pinia'

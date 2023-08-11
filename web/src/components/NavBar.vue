@@ -11,6 +11,7 @@
       <el-menu-item index="/game/" class="nav-item">游戏</el-menu-item>
       <el-menu-item index="/ranklist/" class="nav-item">排行榜</el-menu-item>
       <el-menu-item index="/record/" class="nav-item">回放</el-menu-item>
+      <el-menu-item index="/bot/" class="nav-item">Bot</el-menu-item>
       <div class="flex-grow" />
       <el-sub-menu v-if="isAuth"  index="1">
         <template #title>
@@ -56,6 +57,7 @@ const handleSelect = (key, keyPath) => {
 
 .nav-item {
   color: #303133;
+  letter-spacing: 1px;
 }
 
 .username {

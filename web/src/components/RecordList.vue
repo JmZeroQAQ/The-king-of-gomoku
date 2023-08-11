@@ -30,7 +30,7 @@ const filterTableData = computed(() =>
   tableData.filter(
     (data) =>
       !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
+      data.nameA.toLowerCase().includes(search.value.toLowerCase())
   )
 );
 const handleEdit = (index, row) => {

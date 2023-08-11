@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/user/register/"
                 ).permitAll()
                 .antMatchers("/game/start/").hasIpAddress("127.0.0.1")
+                .antMatchers("/game/bot/move").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 
