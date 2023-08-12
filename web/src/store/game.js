@@ -2,8 +2,10 @@ import { defineStore } from 'pinia';
 import { reactive, ref } from 'vue';
 
 export const useGameStore = defineStore('gameStore', () => {
+    // 新棋子的位置
     const position = ref(-1);
     const isUpdated = ref(false);
+    // 玩家的颜色
     const color = ref("");
     const gameStat = ref("idle"); // 三种状态: idle, running, over;
     // 存储获胜的棋子
@@ -17,6 +19,7 @@ export const useGameStore = defineStore('gameStore', () => {
         rating: "",
     });
 
+    // 是否是Bot操作
     const isBot = ref(false);
 
     const winner = ref("");
@@ -37,6 +40,8 @@ export const useGameStore = defineStore('gameStore', () => {
         gameStat.value = newStat;
     }
 
+    // 调用这个函数来设置新的棋子的位置
+    // GameMap会根据isUpdated来判断新的棋子位置是否被读取
     function updatePosition(newPosition) {
         position.value = newPosition;
         isUpdated.value = true;
