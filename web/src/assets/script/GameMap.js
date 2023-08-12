@@ -30,28 +30,31 @@ export class GameMap extends BaseGameObject {
   addListeningEvents() {
     this.ctx.canvas.focus();
 
-    const { color, webSocket } = storeToRefs(this.gameStore);
-    this.ctx.canvas.addEventListener("click", (e) => {
-      const x = parseInt(e.offsetY / this.scale);
-      const y = parseInt(e.offsetX / this.scale);
-      console.log("x: " + x + " y: " + y);
+    const { color, webSocket, isBot } = storeToRefs(this.gameStore);
 
-      if (color.value === "black" && this.step % 2 === 0) {
-        webSocket.value.send(
-          JSON.stringify({
-            event: "move",
-            position: this.cols * x + y,
-          })
-        );
-      } else if (color.value === "white" && this.step % 2 === 1) {
-        webSocket.value.send(
-          JSON.stringify({
-            event: "move",
-            position: this.cols * x + y,
-          })
-        );
-      }
-    });
+    if (!isBot.value) {
+      this.ctx.canvas.addEventListener("click", (e) => {
+        const x = parseInt(e.offsetY / this.scale);
+        const y = parseInt(e.offsetX / this.scale);
+        console.log("x: " + x + " y: " + y);
+
+        if (color.value === "black" && this.step % 2 === 0) {
+          webSocket.value.send(
+            JSON.stringify({
+              event: "move",
+              position: this.cols * x + y,
+            })
+          );
+        } else if (color.value === "white" && this.step % 2 === 1) {
+          webSocket.value.send(
+            JSON.stringify({
+              event: "move",
+              position: this.cols * x + y,
+            })
+          );
+        }
+      });
+    }
   }
 
   start() {
@@ -161,7 +164,7 @@ export class GameMap extends BaseGameObject {
   }
 
   onDestroy() {
-    for(const chess of this.chessPieces) {
+    for (const chess of this.chessPieces) {
       chess.destroy();
     }
   }

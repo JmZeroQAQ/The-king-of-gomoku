@@ -17,7 +17,13 @@ export const useGameStore = defineStore('gameStore', () => {
         rating: "",
     });
 
+    const isBot = ref(false);
+
     const winner = ref("");
+
+    function setIsBot(flag) {
+        isBot.value = flag;
+    }
 
     function setWinner(newName) {
         winner.value = newName;
@@ -71,5 +77,7 @@ export const useGameStore = defineStore('gameStore', () => {
         setIsUpdated,
         winner,
         setWinner,
+        isBot,
+        setIsBot,
     }
 })

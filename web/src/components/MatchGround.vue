@@ -9,7 +9,19 @@
           </div>
         </div>
         <div class="message">
-          <h1>PK</h1>
+          <h1 style="text-align: center;">PK</h1>
+
+          <div class="bot-select">
+            <el-select
+              v-model="botValue"
+              placeholder="出战方式"
+              size="large"
+              :disabled="selectDisabled"
+            >
+              <el-option :key="-1" :label="'亲自出马'" :value="-1" />
+              <el-option v-for="bot in botList" :key="bot.id" :label="bot.title" :value="bot.id" />
+            </el-select>
+          </div>
         </div>
         <div class="opponent">
           <img
@@ -18,7 +30,7 @@
             alt=""
           />
           <div class="user-name">
-            {{ gameStat === 'running' ? opponent.name : "???"}}
+            {{ gameStat === "running" ? opponent.name : "???" }}
           </div>
         </div>
       </div>
@@ -35,28 +47,38 @@
 
 <script setup>
 import anonymousImage from "@/assets/images/anonymous.png";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useGameStore } from "@/store/game";
 import { useUserStore } from "@/store/user";
 import { storeToRefs } from "pinia";
+import { getBotList } from "@/apis/getBotList";
 
 const userStore = useUserStore();
-const { user } = userStore;
+const { user, token } = storeToRefs(userStore);
 
 const gameStore = useGameStore();
 const { webSocket, opponent, gameStat } = storeToRefs(gameStore);
+const { setIsBot } = gameStore;
 
 const matchInfo = ref("开始匹配");
 function matchEvent() {
   if (matchInfo.value === "开始匹配") {
+    // 记录是否是bot
+    if(botValue.value !== -1) setIsBot(true);
+    else setIsBot(false);
+
     matchInfo.value = "取消匹配";
+    selectDisabled.value = true;
+
     webSocket.value.send(
       JSON.stringify({
         event: "start-matching",
+        bot_id: botValue.value,
       })
     );
   } else {
     matchInfo.value = "开始匹配";
+    selectDisabled.value = false;
     webSocket.value.send(
       JSON.stringify({
         event: "stop-matching",
@@ -64,6 +86,20 @@ function matchEvent() {
     );
   }
 }
+
+const selectDisabled = ref(false);
+const botValue = ref(-1);
+const botList = ref([]);
+
+async function getBots() {
+  const data = await getBotList(token.value);
+  botList.value = data.bots;
+}
+
+onMounted(() => {
+  getBots();
+});
+
 </script>
 
 <style lang="scss" scoped>
@@ -85,7 +121,13 @@ function matchEvent() {
 
   .message {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+
+    .bot-select {
+      margin-top: 20px;
+    }
   }
 
   .user-name {

@@ -89,7 +89,6 @@ public class WebSocketServer {
     }
 
     private void startMatching(Integer botId) {
-        botId = -1;
         System.out.println("start matching");
         MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
         data.set("userId", this.user.getId().toString());

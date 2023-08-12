@@ -65,7 +65,7 @@
           <el-input
             v-model="bot.content"
             placeholder="请输入Bot代码"
-            maxlength="100"
+            maxlength="10000"
             type="textarea"
           />
         </el-form-item>
@@ -109,7 +109,7 @@
           <el-input
             v-model="updatedBot.content"
             placeholder="请输入Bot代码"
-            maxlength="100"
+            maxlength="10000"
             type="textarea"
           />
         </el-form-item>
