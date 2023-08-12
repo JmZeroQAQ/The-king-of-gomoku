@@ -16,5 +16,5 @@ export const getInfo = (token) => {
                 resolve({message: "需要登录后操作"});
             }
         });
-    })
+    });
 }

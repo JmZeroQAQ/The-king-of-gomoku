@@ -1,6 +1,5 @@
 package com.tkog.backend.service.impl.bot;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tkog.backend.mapper.BotMapper;
 import com.tkog.backend.pojo.Bot;
 import com.tkog.backend.pojo.User;

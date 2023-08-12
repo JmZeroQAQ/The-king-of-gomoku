@@ -1,5 +1,6 @@
 package com.tkog.backend.service.impl.bot;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tkog.backend.mapper.BotMapper;
 import com.tkog.backend.pojo.Bot;
@@ -18,12 +19,17 @@ public class GetListServiceImpl implements GetListService {
     private BotMapper botMapper;
 
     @Override
-    public List<Bot> getList() {
+    public JSONObject getList() {
         User user = GetUser.getUser();
 
         QueryWrapper<Bot> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", user.getId());
 
-        return botMapper.selectList(queryWrapper);
+        JSONObject resp = new JSONObject();
+        resp.put("message", "success");
+        List<Bot> bots = botMapper.selectList(queryWrapper);
+        resp.put("bots", bots);
+
+        return resp;
     }
 }

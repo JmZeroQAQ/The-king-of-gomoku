@@ -1,10 +1,7 @@
 package com.tkog.backend.service.bot;
 
-import com.tkog.backend.pojo.Bot;
-
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson2.JSONObject;
 
 public interface GetListService {
-    List<Bot> getList();
+    JSONObject getList();
 }
