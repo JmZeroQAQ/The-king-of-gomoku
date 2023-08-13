@@ -20,6 +20,8 @@ import { storeToRefs } from "pinia";
 
 const props = defineProps({
   current_step: Number,
+  isRecord: Boolean,
+  players: Object,
 });
 
 const parent = ref(null);
@@ -37,12 +39,17 @@ watch(
 );
 
 function getContent() {
-  if (props.current_step % 2 === 0 && color.value === "black")
-    return "你的回合";
-  if (props.current_step % 2 === 1 && color.value === "white")
-    return "你的回合";
-
-  return "对手回合";
+  if (props.isRecord) {
+    if (props.current_step % 2 === 0) return props.players.aName;
+    else return props.players.bName;
+  } else {
+    if (
+      (props.current_step % 2 === 0 && color.value === "black") ||
+      (props.current_step % 2 === 1 && color.value === "white")
+    )
+      return "你的回合";
+    else return "对手回合";
+  }
 }
 
 let gameMap = null;
@@ -77,10 +84,11 @@ onUnmounted(() => {
     margin-top: 10%;
     margin-right: 5%;
     .notice-card {
-      width: 100px;
+      width: 130px;
       padding: 10px;
       background-color: rgba($color: #eebe77, $alpha: 0.4);
       border-radius: 10px;
+      overflow: hidden;
 
       .notice-content {
         font-size: 20px;

@@ -1,12 +1,28 @@
 <template>
   <el-row justify="center">
     <el-col :span="18">
-      <GameMap v-if="gameShow" :current_step="current_step" />
+      <GameMap
+        v-if="gameShow"
+        :current_step="current_step"
+        :isRecord="true"
+        :players="{ aName: recordInfo.aName, bName: recordInfo.bName }"
+      />
+      <RecordResultBoard
+        v-show="boardVisible"
+        @startRecord="startRecord"
+        :players="{
+          aName: recordInfo.aName,
+          bName: recordInfo.bName,
+          winnerName: recordInfo.winnerName,
+        }"
+      />
     </el-col>
   </el-row>
 </template>
 
 <script setup>
+import RecordResultBoard from "@/components/RecordResultBorad.vue";
+
 import { ref, onMounted } from "vue";
 import GameMap from "@/components/GameMap.vue";
 import { getRecordInfo } from "@/apis/record";
@@ -29,6 +45,7 @@ const gameShow = ref(false);
 function startRecord() {
   setIsBot(true);
   setGameStat("running");
+  boardVisible.value = false;
   gameShow.value = true;
   console.log(recordInfo.historySteps);
 
@@ -38,12 +55,17 @@ function startRecord() {
       clearInterval(intervalId);
       setGameStat("over");
       setWinSet(recordInfo.winSet);
+
+      setTimeout(() => {
+        gameShow.value = false;
+        boardVisible.value = true;
+      }, 2000);
     } else {
       updatePosition(recordInfo.historySteps[k]);
       current_step.value++;
     }
     k++;
-  }, 1500);
+  }, 200);
 }
 
 async function getRecord(recordId) {
@@ -56,7 +78,6 @@ async function getRecord(recordId) {
     recordInfo.winnerName = data.winnerName;
 
     startRecord();
-
   } else {
     console.log(data.message);
   }
@@ -66,6 +87,8 @@ const route = useRoute();
 onMounted(() => {
   getRecord(route.query.recordId);
 });
+
+const boardVisible = ref(false);
 </script>
 
 <style lang="scss" scoped></style>

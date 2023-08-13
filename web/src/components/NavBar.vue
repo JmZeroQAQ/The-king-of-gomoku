@@ -1,7 +1,7 @@
 <template>
   <el-menu
     :default-active="activeIndex"
-    class="el-menu-demo"
+    class="navbar"
     mode="horizontal"
     :ellipsis="false"
     @select="handleSelect"
@@ -43,6 +43,10 @@ const handleSelect = (key, keyPath) => {
 </script>
 
 <style lang="scss" scoped>
+.navbar {
+  z-index: 100;
+}
+
 .flex-grow {
   flex-grow: 1;
 }
