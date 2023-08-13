@@ -6,7 +6,13 @@
       </el-header>
       <el-main>
         <!-- main 路由出口 -->
-        <router-view></router-view>
+        <router-view v-slot="{ Component }">
+          <transition name="el-fade-in-linear" mode="out-in">
+            <keep-alive :include="`RecordListView`">
+              <component :is="Component" />
+            </keep-alive>
+          </transition>
+        </router-view>
       </el-main>
       <!-- <el-footer>
         
@@ -16,7 +22,7 @@
 </template>
 
 <script setup>
-import NavBar from '@/components/NavBar.vue';
+import NavBar from "@/components/NavBar.vue";
 </script>
 
 <style lang="scss" scoped>
