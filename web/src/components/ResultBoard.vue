@@ -1,18 +1,17 @@
 <template>
-  <el-card class="result-board">
-    <div class="container">
-      <div class="content">{{ winner === user.name ? "胜 利" : "失 败" }}</div>
-      <div style="text-align: center">
-        <el-button
-          class="button"
-          round
-          type="success"
-          @click="$emit('resetGame')"
-          >再来一把</el-button
+  <div class="backdrop">
+    <el-card class="card">
+      <div class="content">
+        <div class="win-content" v-if="winner === user.name">胜 利</div>
+        <div class="lose-content" v-else>失 败</div>
+      </div>
+      <div class="bottom-menu">
+        <el-button size="large" type="primary" @click="$emit('resetGame')"
+          ><el-icon size="1.2rem"><RefreshRight /></el-icon>再来一把</el-button
         >
       </div>
-    </div>
-  </el-card>
+    </el-card>
+  </div>
 </template>
 
 <script setup>
@@ -28,23 +27,52 @@ const { user } = storeToRefs(userStore);
 </script>
 
 <style lang="scss" scoped>
-.result-board {
-  height: 75vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba($color: #fff, $alpha: 0.1);
+.backdrop {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  background-color: rgba($color: #000000, $alpha: 0.1);
+
+  .card {
+    position: relative;
+    top: 40%;
+    left: 50%;
+    width: 25vw;
+    opacity: 0;
+    animation: slideBottom 1s ease forwards;
+
+    .content {
+      font-size: 46px;
+      /* letter-spacing: 20px; */
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 20px;
+
+      .win-content {
+        color: #67C23A;
+      }
+
+      .lose-content {
+        color: #f56c6c;
+      }
+    }
+
+    .bottom-menu {
+      text-align: center;
+    }
+  }
 }
 
-.content {
-  font-size: 62px;
-  /* letter-spacing: 20px; */
-  font-weight: 800;
-  text-align: center;
-}
+@keyframes slideBottom {
+  0% {
+    transform: translate(-50%, -65%);
+  }
 
-.button {
-  margin-top: 20px;
-  padding: 30px;
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
 }
 </style>

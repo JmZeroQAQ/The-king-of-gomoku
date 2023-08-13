@@ -65,7 +65,7 @@ function startRecord() {
       current_step.value++;
     }
     k++;
-  }, 200);
+  }, 1500);
 }
 
 async function getRecord(recordId) {

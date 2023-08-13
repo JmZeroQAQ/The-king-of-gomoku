@@ -112,7 +112,7 @@ onMounted(() => {
 
 .el-card {
   width: 100%;
-  background-color: rgba($color: #fff, $alpha: 0.1);
+  background-color: rgba($color: #fff, $alpha: 0.7);
 }
 
 .user-body {
