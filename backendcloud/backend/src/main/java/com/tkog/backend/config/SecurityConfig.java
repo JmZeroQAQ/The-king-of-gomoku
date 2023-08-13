@@ -48,7 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/user/login/",
-                        "/user/register/"
+                        "/user/register/",
+                        "/record/getAllList/",
+                        "/record/getInfo/"
                 ).permitAll()
                 .antMatchers("/game/start/").hasIpAddress("127.0.0.1")
                 .antMatchers("/game/bot/move").permitAll()

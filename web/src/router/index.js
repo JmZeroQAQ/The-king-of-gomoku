@@ -32,6 +32,18 @@ export const routes = [
     }],
   },
   {
+    path: "/recordlist/",
+    component: BaseLayout,
+    children: [{
+        path: "",
+        component: () => import('@/views/RecordListView.vue'),
+        meta: {
+          // 是否需要登录
+          isAuth: false,
+        }
+    }],
+  },
+  {
     path: "/record/",
     component: BaseLayout,
     children: [{
@@ -39,7 +51,7 @@ export const routes = [
         component: () => import('@/views/RecordView.vue'),
         meta: {
           // 是否需要登录
-          isAuth: true,
+          isAuth: false,
         }
     }],
   },

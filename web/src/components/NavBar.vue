@@ -10,7 +10,7 @@
     <el-menu-item index="/home/" class="logo">TOKG</el-menu-item>
     <el-menu-item index="/game/" class="nav-item">游戏</el-menu-item>
     <el-menu-item index="/ranklist/" class="nav-item">排行榜</el-menu-item>
-    <el-menu-item index="/record/" class="nav-item">回放</el-menu-item>
+    <el-menu-item index="/recordlist/" class="nav-item">历史对局</el-menu-item>
     <div class="flex-grow" />
     <el-sub-menu v-if="isAuth" index="1">
       <template #title>
@@ -18,7 +18,6 @@
       </template>
       <el-menu-item index="/profile/">个人信息</el-menu-item>
       <el-menu-item index="/bot/">我的Bot</el-menu-item>
-      <el-menu-item index="/record/">对局记录</el-menu-item>
       <el-menu-item @click="logout">退出</el-menu-item>
     </el-sub-menu>
     <el-menu-item v-else index="/login/" class="login">

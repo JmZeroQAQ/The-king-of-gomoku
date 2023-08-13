@@ -20,7 +20,6 @@ public class Record {
     private Integer winnerId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date createTime;
-
     private String historySteps;
     private String winSet;
 }
