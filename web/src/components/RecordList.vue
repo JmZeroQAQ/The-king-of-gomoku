@@ -11,7 +11,7 @@
           <div>回放</div>
         </template>
         <template #default="scope">
-          <el-button type="primary" size="small">回放</el-button>
+          <el-button @click="openRecordOnClick(scope.row.record_id)" type="primary" size="small">回放</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -21,6 +21,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getAllList } from "@/apis/record";
+import { useRouter } from "vue-router";
 
 const records = ref([]);
 
@@ -37,6 +38,17 @@ async function getRecordsList(page) {
 onMounted(() => {
   getRecordsList(1);
 });
+
+const router = useRouter();
+
+const openRecordOnClick = recordId => {
+  router.push({
+    path: "/record/",
+    query: {
+      recordId,
+    },
+  });
+}
 
 </script>
 
