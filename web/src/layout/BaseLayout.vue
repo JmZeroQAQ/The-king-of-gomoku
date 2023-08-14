@@ -8,7 +8,9 @@
         <!-- main 路由出口 -->
         <router-view v-slot="{ Component }">
           <transition name="el-fade-in-linear" mode="out-in">
-            <keep-alive :include="['RecordListView', 'ProfileView']">
+            <keep-alive
+              :include="['RecordListView', 'ProfileView', 'RanklistView']"
+            >
               <component :is="Component" />
             </keep-alive>
           </transition>

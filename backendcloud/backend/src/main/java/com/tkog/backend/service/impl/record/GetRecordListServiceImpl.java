@@ -62,9 +62,11 @@ public class GetRecordListServiceImpl implements GetRecordListService {
         JSONObject resp = new JSONObject();
 
         int page = getPage(data);
+        // 没有传入页数，直接返回
         if(page == -1) {
             resp.put("code", AppHttpCodeEnum.SYSTEM_ERROR.getCode());
             resp.put("message", AppHttpCodeEnum.SYSTEM_ERROR.getMessage());
+            return resp;
         }
 
         // 每页15条记录
@@ -117,9 +119,11 @@ public class GetRecordListServiceImpl implements GetRecordListService {
         JSONObject resp = new JSONObject();
 
         int page = getPage(data);
+        // 没有传入页数，直接返回
         if(page == -1) {
             resp.put("code", AppHttpCodeEnum.SYSTEM_ERROR.getCode());
             resp.put("message", AppHttpCodeEnum.SYSTEM_ERROR.getMessage());
+            return resp;
         }
 
         IPage<Record> recordIPage = new Page<>(page, 15);

@@ -1,179 +1,87 @@
 <template>
-  <el-row justify="center" :gutter="20">
+  <el-row justify="center">
     <el-col :span="14">
       <el-card>
         <h1 class="title">排行榜</h1>
-        <el-table :data="filterTableData" style="width: 100%" max-height="74vh">
-          <el-table-column label="No." prop="name" />
-          <el-table-column label="昵称" prop="name" />
-          <el-table-column label="Rating" prop="rating" />
+        <el-table
+          v-loading="loading"
+          :data="rankList"
+          style="width: 100%"
+          max-height="74vh"
+        >
+          <el-table-column label="No.">
+            <template #default="scope">
+              <div>{{ rankList.indexOf(scope.row) + 1 }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="昵称">
+            <template #default="scope">
+              <div class="username">{{ scope.row.name }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="rating">
+            <template #default="scope">
+              <div class="rating">{{ scope.row.rating }}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="场次" prop="counts" />
-          <el-table-column label="胜率" prop="win" />
+          <el-table-column label="胜场" prop="win_counts" />
+          <el-table-column label="胜率">
+            <template #default="scope">
+              <div class="winrate">{{ getWinRate(scope.row) }}</div>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
-    </el-col>
-    <el-col :span="6">
-        <el-card>
-            <div class="my-rank">
-                <h3>我的排名</h3>
-                <div>
-                    <span class="label">昵称: </span> 
-                    <span>JmZeroQAQ</span>
-                </div>
-                <div>
-                    <span class="label">排名: </span>
-                    <span>No.1</span>
-                </div>
-                <div>
-                    <span class="label">Rating: </span>
-                    <span>2000</span>
-                </div>
-                <div>
-                    <span class="label">场次: </span>
-                    <span>900</span>
-                </div>
-                <div>
-                    <span class="label">胜率: </span>
-                    <span>56%</span>
-                </div>
-            </div>
-            
-        </el-card>
     </el-col>
   </el-row>
 </template>
 
 <script setup>
-const filterTableData = [
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-    {
-        name: "123",
-        rating: "1500",
-        counts: 301,
-        win: "55%",
-    },
-]
+import { ref, onMounted } from "vue";
+import { getRankList } from "@/apis/rankList";
+
+const loading = ref(true);
+const rankList = ref([]);
+
+async function getList(page) {
+  const data = await getRankList(page);
+  if (data.message === "success") {
+    rankList.value = data.rank_list;
+    loading.value = false;
+  } else {
+    console.log(data.message);
+  }
+}
+
+onMounted(() => {
+  getList(1);
+});
+
+function getWinRate(user) {
+  if (user.counts === 0) return "0%";
+
+  const winRate = (user.win_counts / user.counts).toFixed(2);
+  return `${winRate * 100}%`;
+}
 </script>
 
 <style lang="scss" scoped>
 .title {
-    text-align: center;
+  text-align: center;
 }
 
-.my-rank {
-    h3 {
-        text-align: center;
-    }
+.username {
+  font-weight: 600;
+}
 
-    .label {
-        font-weight: 600;
-    }
+.rating {
+    color: #67C23A;
+    font-weight: 600;
+}
+
+.winrate {
+    color: #409EFF;
+    font-weight: 600;
 }
 </style>

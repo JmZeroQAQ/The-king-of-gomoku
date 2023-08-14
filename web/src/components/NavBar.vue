@@ -4,7 +4,6 @@
     class="navbar"
     mode="horizontal"
     :ellipsis="false"
-    @select="handleSelect"
     :router="true"
   >
     <el-menu-item index="/home/" class="logo">TOKG</el-menu-item>
@@ -27,9 +26,10 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useUserStore } from "@/store/user";
 import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
 
 const userStore = useUserStore();
 
@@ -37,9 +37,11 @@ const { isAuth, user } = storeToRefs(userStore);
 const { logout } = userStore;
 
 const activeIndex = ref("/home/");
-const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath);
-};
+const route = useRoute();
+onMounted(() => {
+  activeIndex.value = route.path;
+});
+
 </script>
 
 <style lang="scss" scoped>
