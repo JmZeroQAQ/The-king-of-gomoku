@@ -18,7 +18,7 @@ public class Consumer extends Thread {
     private Bot bot;
     private long timeout;
     private static RestTemplate restTemplate;
-    private final static String botMoveUrl = "";
+    private final static String botMoveUrl = "http://127.0.0.1:3000/game/bot/move/";
 
     @Autowired
     public void setRestTemplate(RestTemplate restTemplate) {
@@ -60,14 +60,16 @@ public class Consumer extends Thread {
             throw new RuntimeException(e);
         }
 
+        if(file.exists()) file.delete();
+
         return position;
     }
 
     @Override
     public void run() {
         // 将输入和代码写入文件
-        writeFile("input", this.bot.getInput());
-        writeFile("code.cpp", this.bot.getBotCode());
+        writeFile("/home/jmzero/app/code/input", this.bot.getInput());
+        writeFile("/home/jmzero/app/code/code.cpp", this.bot.getBotCode());
 
         Process process;
         try {

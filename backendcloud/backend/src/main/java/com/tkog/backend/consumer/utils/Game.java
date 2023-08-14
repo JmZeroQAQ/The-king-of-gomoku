@@ -138,8 +138,8 @@ public class Game extends Thread {
 
     private String getInput(Integer userId) {
         StringBuilder res = new StringBuilder();
-        // 0表示黑子, 1表示白子
-        if(aUserId.equals(userId)) res.append(0);
+        // 2表示黑子, 1表示白子
+        if(aUserId.equals(userId)) res.append(2);
         else res.append(1);
         res.append("\n");
         res.append(rows);
