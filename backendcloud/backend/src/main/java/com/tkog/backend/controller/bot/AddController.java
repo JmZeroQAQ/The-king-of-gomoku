@@ -13,7 +13,7 @@ public class AddController {
     @Autowired
     private AddService addService;
 
-    @PostMapping("/bot/add/")
+    @PostMapping("/api/bot/add/")
     public Map<String, String> add(@RequestParam Map<String, String> data) {
         return addService.add(data);
     }

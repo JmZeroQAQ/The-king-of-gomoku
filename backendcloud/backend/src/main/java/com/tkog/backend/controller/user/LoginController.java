@@ -14,7 +14,7 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/user/login/")
+    @PostMapping("/api/user/login/")
     JSONObject getToken(@RequestParam Map<String, String> map) {
         String username = map.get("username");
         String password = map.get("password");

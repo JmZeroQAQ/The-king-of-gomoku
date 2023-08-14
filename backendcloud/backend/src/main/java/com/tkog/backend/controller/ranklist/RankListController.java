@@ -15,7 +15,7 @@ public class RankListController {
     @Autowired
     RankListService rankListService;
 
-    @GetMapping("/rankList/getList/")
+    @GetMapping("/api/rankList/getList/")
     public JSONObject getList(@RequestParam Map<String, String> data) {
         return rankListService.getList(data);
     }

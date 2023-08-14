@@ -47,11 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(
-                        "/user/login/",
-                        "/user/register/",
-                        "/record/getAllList/",
-                        "/record/getInfo/",
-                        "/rankList/getList/"
+                        "/api/user/login/",
+                        "/api/user/register/",
+                        "/api/record/getAllList/",
+                        "/api/record/getInfo/",
+                        "/api/rankList/getList/"
                 ).permitAll()
                 .antMatchers("/game/start/", "/game/bot/move/").hasIpAddress("127.0.0.1")
                 .antMatchers(HttpMethod.OPTIONS).permitAll()

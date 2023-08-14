@@ -14,17 +14,17 @@ public class GetRecordListController {
     @Autowired
     GetRecordListService getRecordListService;
 
-    @GetMapping("/record/getAllList/")
+    @GetMapping("/api/record/getAllList/")
     public JSONObject getRecordAll(@RequestParam Map<String, String> data) {
         return getRecordListService.getAllRecord(data);
     }
 
-    @GetMapping("/record/getInfo/")
+    @GetMapping("/api/record/getInfo/")
     public JSONObject getRecordInfo(@RequestParam Map<String, String> data) {
         return getRecordListService.getRecordInfo(data);
     }
 
-    @GetMapping("/record/getMyRecords/")
+    @GetMapping("/api/record/getMyRecords/")
     public JSONObject getMyRecords(@RequestParam Map<String, String> data) {
         return getRecordListService.getMyRecords(data);
     }
