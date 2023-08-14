@@ -36,3 +36,24 @@ export const getRecordInfo = (recordId) => {
     });
   });
 };
+
+export const getMyRecords = (token, page) => {
+  return new Promise((resolve) => {
+    $.ajax({
+      url: URL + "/record/getMyRecords/",
+      type: "get",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      data: {
+        page,
+      },
+      success(resp) {
+        resolve(resp);
+      },
+      error() {
+        resolve({ message: "获取记录失败" });
+      },
+    });
+  });
+};

@@ -1,17 +1,29 @@
 <template>
   <el-card>
     <h1 style="text-align: center">对局记录</h1>
-    <el-table v-loading="loading" :data="records" style="width: 100%" max-height="100vh - 180px">
+    <el-table
+      v-loading="loading"
+      :data="records"
+      style="width: 100%"
+      max-height="100vh - 180px"
+    >
       <el-table-column align="center" label="PlayerA" prop="aName" />
       <el-table-column align="center" label="PlayerB" prop="bName" />
       <el-table-column align="center" label="Winner" prop="winnerName" />
       <el-table-column align="center" label="Date" prop="create_time" />
       <el-table-column align="center">
         <template #header>
-          <div>回放</div>
+          <el-button @click="getRecordsList(1)" circle
+            ><el-icon><Refresh /></el-icon
+          ></el-button>
         </template>
         <template #default="scope">
-          <el-button @click="openRecordOnClick(scope.row.record_id)" type="primary" size="small">回放</el-button>
+          <el-button
+            @click="openRecordOnClick(scope.row.record_id)"
+            type="primary"
+            size="small"
+            >回放</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -28,7 +40,7 @@ const records = ref([]);
 
 async function getRecordsList(page) {
   const data = await getAllList(page);
-  if(data.message === "success") {
+  if (data.message === "success") {
     records.value = data.records;
     loading.value = false;
     console.log(data.records);
@@ -43,16 +55,14 @@ onMounted(() => {
 
 const router = useRouter();
 
-const openRecordOnClick = recordId => {
+const openRecordOnClick = (recordId) => {
   router.push({
     path: "/record/",
     query: {
       recordId,
     },
   });
-}
-
+};
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

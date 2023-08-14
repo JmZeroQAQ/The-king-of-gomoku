@@ -16,14 +16,16 @@ public class GetRecordListController {
 
     @GetMapping("/record/getAllList/")
     public JSONObject getRecordAll(@RequestParam Map<String, String> data) {
-        Integer page = Integer.parseInt(data.get("page"));
-        return getRecordListService.getAllRecord(page);
+        return getRecordListService.getAllRecord(data);
     }
 
     @GetMapping("/record/getInfo/")
     public JSONObject getRecordInfo(@RequestParam Map<String, String> data) {
-        Integer recordId = Integer.parseInt(data.get("record_id"));
+        return getRecordListService.getRecordInfo(data);
+    }
 
-        return getRecordListService.getRecordInfo(recordId);
+    @GetMapping("/record/getMyRecords/")
+    public JSONObject getMyRecords(@RequestParam Map<String, String> data) {
+        return getRecordListService.getMyRecords(data);
     }
 }

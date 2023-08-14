@@ -2,8 +2,12 @@ package com.tkog.backend.service.record;
 
 import com.alibaba.fastjson2.JSONObject;
 
-public interface GetRecordListService {
-    JSONObject getAllRecord(Integer page);
+import java.util.Map;
 
-    JSONObject getRecordInfo(Integer recordId);
+public interface GetRecordListService {
+    JSONObject getAllRecord(Map<String, String> data);
+
+    JSONObject getRecordInfo(Map<String, String> data);
+
+    JSONObject getMyRecords(Map<String, String> data);
 }

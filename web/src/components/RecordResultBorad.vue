@@ -35,9 +35,7 @@ const props = defineProps({
 
 const router = useRouter();
 function goBackOnClick() {
-  router.push({
-    path: "/recordList/",
-  });
+  router.back();
 }
 </script>
 
