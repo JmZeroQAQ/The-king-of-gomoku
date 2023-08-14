@@ -6,7 +6,7 @@ import com.tkog.backend.mapper.UserMapper;
 import com.tkog.backend.pojo.User;
 import com.tkog.backend.service.impl.utils.UserDetailsImpl;
 import com.tkog.backend.utils.JwtUtil;
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import com.tkog.backend.utils.WebUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
