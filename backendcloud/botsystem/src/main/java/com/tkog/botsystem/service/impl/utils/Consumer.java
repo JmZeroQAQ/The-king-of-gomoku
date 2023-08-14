@@ -61,7 +61,6 @@ public class Consumer extends Thread {
         }
 
         if(file.exists()) file.delete();
-
         return position;
     }
 
@@ -91,8 +90,10 @@ public class Consumer extends Thread {
         // 如果脚本运行的没有问题,就将输出结果发送回去
         if(process.exitValue() == 0) {
             int position = readPosition();
+            System.out.println("output position is: " + position);
+
             MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
-            data.add("user_id", bot.getUserId().toString());
+            data.add("userId", bot.getUserId().toString());
             data.add("position", Integer.toString(position));
 
             restTemplate.postForObject(botMoveUrl, data, String.class);
