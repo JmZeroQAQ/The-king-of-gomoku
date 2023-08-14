@@ -22,7 +22,12 @@
               >
             </template>
             <template #default="scope">
-              <el-button type="primary" size="small" @click="modifyBotOnClick(scope.row)">修改</el-button>
+              <el-button
+                type="primary"
+                size="small"
+                @click="modifyBotOnClick(scope.row)"
+                >修改</el-button
+              >
               <el-button
                 type="danger"
                 size="small"
@@ -34,7 +39,12 @@
         </el-table>
       </el-card>
 
-      <el-dialog v-model="createVisible" :show-close="false" width="70%">
+      <el-dialog
+        v-model="createVisible"
+        :show-close="false"
+        width="70%"
+        top="8vh"
+      >
         <template #header="{ titleId, titleClass }">
           <div class="my-header">
             <h4 :id="titleId" :class="titleClass">创建Bot</h4>
@@ -62,11 +72,17 @@
         </el-form-item>
 
         <el-form-item label="Bot代码">
-          <el-input
-            v-model="bot.content"
-            placeholder="请输入Bot代码"
-            maxlength="10000"
-            type="textarea"
+          <VAceEditor
+            v-model:value="bot.content"
+            class="editor"
+            lang="c_cpp"
+            theme="textmate"
+            :options="{
+              fontSize: 16,
+              wrap: true,
+              showPrintMargin: false,
+            }"
+            style="height: 300px; width: 100%"
           />
         </el-form-item>
 
@@ -78,7 +94,12 @@
         </template>
       </el-dialog>
 
-      <el-dialog v-model="updateVisible" :show-close="false" width="70%">
+      <el-dialog
+        v-model="updateVisible"
+        :show-close="false"
+        width="70%"
+        top="8vh"
+      >
         <template #header="{ titleId, titleClass }">
           <div class="my-header">
             <h4 :id="titleId" :class="titleClass">修改Bot</h4>
@@ -106,18 +127,26 @@
         </el-form-item>
 
         <el-form-item label="Bot代码">
-          <el-input
-            v-model="updatedBot.content"
-            placeholder="请输入Bot代码"
-            maxlength="10000"
-            type="textarea"
+          <VAceEditor
+            v-model:value="updatedBot.content"
+            class="editor"
+            lang="c_cpp"
+            theme="textmate"
+            :options="{
+              fontSize: 16,
+              wrap: true,
+              showPrintMargin: false,
+            }"
+            style="height: 300px; width: 100%"
           />
         </el-form-item>
 
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="updateVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="updateBotOnClick"> 修改 </el-button>
+            <el-button type="primary" @click="updateBotOnClick">
+              修改
+            </el-button>
           </span>
         </template>
       </el-dialog>
@@ -133,6 +162,11 @@ import { addBot } from "@/apis/addBot";
 import { getBotList } from "@/apis/getBotList";
 import { removeBot } from "@/apis/removeBot";
 import { updateBot } from "@/apis/updateBot";
+import { VAceEditor } from "vue3-ace-editor";
+
+import "ace-builds/src-min-noconflict/mode-c_cpp";
+import "ace-builds/src-min-noconflict/theme-textmate";
+import "ace-builds/src-min-noconflict/ext-language_tools";
 
 // 创建bot的模态框
 const createVisible = ref(false);
@@ -140,7 +174,27 @@ const createVisible = ref(false);
 const bot = reactive({
   title: "",
   description: "",
-  content: "",
+  content: `#include <iostream>
+
+const int N = 15;
+
+int color;
+int rows, cols;
+int result;
+
+int a[N][N];
+
+int main() {
+    cin >> color;
+    cin >> rows >> cols;
+    for(int i = 0; i < rows; i++)
+        for(int j = 0; j < cols; j++)
+            cin >> a[i][j];
+            
+    cout << result << endl;
+    return 0;
+}
+`,
 });
 
 const userStore = useUserStore();
@@ -190,11 +244,11 @@ const modifyBotOnClick = (bot) => {
   updatedBot.id = bot.id;
 
   updateVisible.value = true;
-}
+};
 
 const updateBotOnClick = async () => {
   const data = await updateBot(token.value, updatedBot);
-  if(data.message === "success") {
+  if (data.message === "success") {
     updateVisible.value = false;
 
     updatedBot.title = "";
@@ -206,7 +260,7 @@ const updateBotOnClick = async () => {
   } else {
     console.log(data.message);
   }
-}
+};
 
 const removeBotOnClick = async (botId) => {
   const data = await removeBot(token.value, botId);
@@ -222,4 +276,8 @@ const removeBotOnClick = async (botId) => {
 const botData = ref([]);
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.editor {
+  border: 1px solid #e9e9eb;
+}
+</style>

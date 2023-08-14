@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "ace-builds": "^1.24.0",
     "element-plus": "^2.3.8",
     "jquery": "^3.7.0",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.4"
+    "vue-router": "^4.2.4",
+    "vue3-ace-editor": "^2.2.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
