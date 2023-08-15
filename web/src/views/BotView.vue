@@ -163,6 +163,7 @@ import { getBotList } from "@/apis/getBotList";
 import { removeBot } from "@/apis/removeBot";
 import { updateBot } from "@/apis/updateBot";
 import { VAceEditor } from "vue3-ace-editor";
+import { ElMessage } from "element-plus";
 
 import "ace-builds/src-min-noconflict/mode-c_cpp";
 import "ace-builds/src-min-noconflict/theme-textmate";
@@ -216,6 +217,11 @@ const addBotOnClick = async () => {
   if (data.message === "success") {
     createVisible.value = false;
 
+    ElMessage({
+      message: "添加Bot成功",
+      type: "success",
+    });
+
     // 刷新Bot列表
     refreshBots();
 
@@ -223,7 +229,7 @@ const addBotOnClick = async () => {
     bot.description = "";
     bot.content = "";
   } else {
-    console.log(data.message);
+    ElMessage.error(data.message);
   }
 };
 
@@ -251,6 +257,11 @@ const updateBotOnClick = async () => {
   if (data.message === "success") {
     updateVisible.value = false;
 
+    ElMessage({
+      message: "修改Bot成功",
+      type: "success",
+    });
+
     updatedBot.title = "";
     updatedBot.description = "";
     updatedBot.content = "";
@@ -258,18 +269,22 @@ const updateBotOnClick = async () => {
 
     refreshBots();
   } else {
-    console.log(data.message);
+    ElMessage.error(data.message);
   }
 };
 
 const removeBotOnClick = async (botId) => {
   const data = await removeBot(token.value, botId);
   if (data.message === "success") {
-    console.log("删除成功");
+    
+    ElMessage({
+      message: "删除Bot成功",
+      type: "success",
+    });
     // 刷新Bot列表
     refreshBots();
   } else {
-    console.log(data.message);
+    ElMessage.error(data.message);
   }
 };
 

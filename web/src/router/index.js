@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import BaseLayout from "@/layout/BaseLayout.vue";
+import { useUserStore } from "@/store/user";
+import { storeToRefs } from "pinia";
 
 export const routes = [
   {
@@ -15,7 +17,7 @@ export const routes = [
         name: "home",
         meta: {
           // 是否需要登录后才可以进入
-          isAuth: false,
+          requiresAuth: false,
         }
     }],
   },
@@ -27,7 +29,7 @@ export const routes = [
         component: () => import('@/views/GameView.vue'),
         meta: {
           // 是否需要登录
-          isAuth: true,
+          requiresAuth: true,
         }
     }],
   },
@@ -39,7 +41,7 @@ export const routes = [
         component: () => import('@/views/RecordListView.vue'),
         meta: {
           // 是否需要登录
-          isAuth: false,
+          requiresAuth: false,
         }
     }],
   },
@@ -51,7 +53,7 @@ export const routes = [
         component: () => import('@/views/RecordView.vue'),
         meta: {
           // 是否需要登录
-          isAuth: false,
+          requiresAuth: false,
         }
     }],
   },
@@ -63,7 +65,7 @@ export const routes = [
         component: () => import('@/views/RanklistView.vue'),
         meta: {
           // 是否需要登录
-          isAuth: true,
+          requiresAuth: false,
         }
     }],
   },
@@ -75,7 +77,7 @@ export const routes = [
         component: () => import('@/views/ProfileView.vue'),
         meta: {
           // 是否需要登录后才可以进入
-          isAuth: true,
+          requiresAuth: true,
         }
     }],
   },
@@ -87,7 +89,7 @@ export const routes = [
         component: () => import('@/views/BotView.vue'),
         meta: {
           // 是否需要登录后才可以进入
-          isAuth: true,
+          requiresAuth: true,
         }
     }],
   },
@@ -99,7 +101,7 @@ export const routes = [
         component: () => import('@/views/LoginView.vue'),
         meta: {
           // 是否需要登录后才可以进入
-          isAuth: false,
+          requiresAuth: false,
         }
     }],
   },
@@ -111,7 +113,7 @@ export const routes = [
         component: () => import('@/views/NotFoundView.vue'),
         meta: {
           // 是否需要登录后才可以进入
-          isAuth: false,
+          requiresAuth: false,
         }
     }],
   },
@@ -125,6 +127,21 @@ export const routes = [
 const router = createRouter({
   routes,
   history: createWebHistory(),
+});
+
+// 路由守卫来鉴别页面权限
+router.beforeEach((to, from) => {
+  const userStore = useUserStore();
+  const { isAuth } = storeToRefs(userStore);
+
+  if(to.meta.requiresAuth && !isAuth.value) {
+    return {
+      path: "/login/",
+      query: { redirect: to.fullPath },
+    }
+  }
+
+  return true;
 });
 
 export default router;

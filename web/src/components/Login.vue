@@ -66,10 +66,11 @@
 import { ref, onUnmounted } from "vue";
 import { login } from "@/apis/login";
 import { useUserStore } from "@/store/user";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { setToken as setTokenToLocalStorage } from "@/utils/storage";
 
 const router = useRouter();
+const route = useRoute();
 
 const alertNotice = ref("请输入账号密码");
 const username = ref("");
@@ -81,7 +82,7 @@ const alertType = ref("info");
 // 路由跳转定时器的Id
 let routerSkipId = null;
 onUnmounted(() => {
-  if(routerSkipId !== null) {
+  if (routerSkipId !== null) {
     clearTimeout(routerSkipId);
     routerSkipId = null;
   }
@@ -105,9 +106,13 @@ async function loginEvent() {
     // 登录成功1.2s后跳转
     routerSkipId = setTimeout(() => {
       setIsAuth(true);
-      router.push({name: "home"});
+      
+      if (route.query.redirect != null) {
+        router.push({ path: route.query.redirect });
+      } else {
+        router.push({ name: "home" });
+      }
     }, 1200);
-
   } else {
     alertNotice.value = data.message;
     alertType.value = "error";
@@ -115,7 +120,7 @@ async function loginEvent() {
 }
 
 function getAlertEffect() {
-  if(alertType.value === "info") return "light";
+  if (alertType.value === "info") return "light";
   return "dark";
 }
 </script>

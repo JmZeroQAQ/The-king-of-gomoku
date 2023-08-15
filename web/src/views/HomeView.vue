@@ -7,7 +7,7 @@
           亲自出马，或者创造Bot来击败对方，获得胜利吧！
         </p>
         <div class="start-button">
-          <el-button round>
+          <el-button @click="startGameOnClick" round>
             <el-icon color="#409EFF" size="1.4rem"><StarFilled /></el-icon>
             即刻开始
           </el-button>
@@ -20,7 +20,13 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+
+function startGameOnClick() {
+  router.push({path: "/game/"});
+}
 
 </script>
 

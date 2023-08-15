@@ -11,7 +11,7 @@
             <keep-alive
               :include="['RecordListView', 'ProfileView', 'RanklistView']"
             >
-              <component :is="Component" />
+              <component :is="Component" :key="$route.path"/>
             </keep-alive>
           </transition>
         </router-view>

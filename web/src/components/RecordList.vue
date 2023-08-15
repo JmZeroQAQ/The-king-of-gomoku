@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <h1 style="text-align: center">对局记录</h1>
+    <h1 style="text-align: center">近期对局</h1>
     <el-table
       v-loading="loading"
       :data="records"
@@ -34,6 +34,7 @@
 import { ref, onMounted } from "vue";
 import { getAllList } from "@/apis/record";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
 
 const loading = ref(true);
 const records = ref([]);
@@ -43,9 +44,13 @@ async function getRecordsList(page) {
   if (data.message === "success") {
     records.value = data.records;
     loading.value = false;
-    console.log(data.records);
+
+    ElMessage({
+      message: "获取近期对局成功",
+      type: "success",
+    });
   } else {
-    console.log(data.message);
+    ElMessage.error(data.message);
   }
 }
 

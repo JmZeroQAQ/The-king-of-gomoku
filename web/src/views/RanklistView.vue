@@ -40,6 +40,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getRankList } from "@/apis/rankList";
+import { ElMessage } from 'element-plus';
 
 const loading = ref(true);
 const rankList = ref([]);
@@ -49,8 +50,13 @@ async function getList(page) {
   if (data.message === "success") {
     rankList.value = data.rank_list;
     loading.value = false;
+
+    ElMessage({
+      message: "获取排行榜成功",
+      type: "success",
+    });
   } else {
-    console.log(data.message);
+    ElMessage.error(data.message);
   }
 }
 
