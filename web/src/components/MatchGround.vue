@@ -31,7 +31,7 @@
         <div class="opponent">
           <img
             class="user-image"
-            :src="gameStat === 'running' ? opponent.avatar : anonymousImage"
+            :src="gameStat === 'running' ? opponent.avatar : 'https://ranunculus.top/media/images/202308151648088.png'"
             alt=""
           />
           <div class="user-name">
@@ -51,7 +51,6 @@
 </template>
 
 <script setup>
-import anonymousImage from "@/assets/images/anonymous.png";
 import { ref, onMounted } from "vue";
 import { useGameStore } from "@/store/game";
 import { useUserStore } from "@/store/user";

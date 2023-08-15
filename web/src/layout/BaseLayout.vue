@@ -32,7 +32,7 @@ import NavBar from "@/components/NavBar.vue";
   content: "";
   width: 100vw;
   height: 100vh;
-  background-image: url("@/assets/images/background.png");
+  background-image: url("https://ranunculus.top/media/images/2023081516480112.png");
   background-size: cover;
   position: absolute;
   top: 0;
