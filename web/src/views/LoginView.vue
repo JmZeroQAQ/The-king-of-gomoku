@@ -15,14 +15,8 @@
             </div>
           </el-col>
           <el-col :span="12">
-            <Login 
-              v-if="state === 'login'" 
-              @setState="setState"
-            />
-            <Register 
-              v-if="state === 'register'" 
-              @setState="setState"
-            />
+            <Login v-if="state === 'login'" @setState="setState" />
+            <Register v-if="state === 'register'" @setState="setState" />
           </el-col>
         </el-row>
       </el-card>
@@ -31,16 +25,15 @@
 </template>
 
 <script setup>
-import Login from '@/components/Login.vue';
-import Register from '@/components/Register.vue';
-import { ref } from 'vue';
+import Login from "@/components/Login.vue";
+import Register from "@/components/Register.vue";
+import { ref } from "vue";
 
 const state = ref("login");
 
 function setState(newState) {
   state.value = newState;
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -86,6 +79,6 @@ function setState(newState) {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background-color: #dedfe0;
+  background: linear-gradient(to bottom, #c6e2ff, #d1edc4);
 }
 </style>

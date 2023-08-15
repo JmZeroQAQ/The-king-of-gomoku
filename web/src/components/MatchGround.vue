@@ -9,7 +9,7 @@
           </div>
         </div>
         <div class="message">
-          <h1 style="text-align: center;">PK</h1>
+          <h1 style="text-align: center">PK</h1>
 
           <div class="bot-select">
             <el-select
@@ -19,7 +19,12 @@
               :disabled="selectDisabled"
             >
               <el-option :key="-1" :label="'亲自出马'" :value="-1" />
-              <el-option v-for="bot in botList" :key="bot.id" :label="bot.title" :value="bot.id" />
+              <el-option
+                v-for="bot in botList"
+                :key="bot.id"
+                :label="bot.title"
+                :value="bot.id"
+              />
             </el-select>
           </div>
         </div>
@@ -64,7 +69,7 @@ const matchInfo = ref("开始匹配");
 function matchEvent() {
   if (matchInfo.value === "开始匹配") {
     // 记录是否是bot
-    if(botValue.value !== -1) setIsBot(true);
+    if (botValue.value !== -1) setIsBot(true);
     else setIsBot(false);
 
     matchInfo.value = "取消匹配";
@@ -99,7 +104,6 @@ async function getBots() {
 onMounted(() => {
   getBots();
 });
-
 </script>
 
 <style lang="scss" scoped>
@@ -113,6 +117,10 @@ onMounted(() => {
 .el-card {
   width: 100%;
   background-color: rgba($color: #fff, $alpha: 0.8);
+
+  opacity: 0;
+  animation: slideBottom 1s ease forwards;
+  animation-delay: .2s;
 }
 
 .user-body {
@@ -147,5 +155,16 @@ onMounted(() => {
 
 .button-container {
   text-align: center;
+}
+
+@keyframes slideBottom {
+  0% {
+    transform: translateY(-100px);
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 </style>

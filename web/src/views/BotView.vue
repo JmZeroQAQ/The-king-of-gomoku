@@ -89,7 +89,14 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="createVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="addBotOnClick"> 提交 </el-button>
+            <el-button
+              :disabled="addBotLoading"
+              v-loading="addBotLoading"
+              type="primary"
+              @click="addBotOnClick"
+            >
+              提交
+            </el-button>
           </span>
         </template>
       </el-dialog>
@@ -144,7 +151,12 @@
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="updateVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="updateBotOnClick">
+            <el-button
+              v-loading="updateBotLoading"
+              :disabled="updateBotLoading"
+              type="primary"
+              @click="updateBotOnClick"
+            >
               修改
             </el-button>
           </span>
@@ -172,12 +184,17 @@ import "ace-builds/src-min-noconflict/ext-language_tools";
 // 创建bot的模态框
 const createVisible = ref(false);
 
+// 加载动画控制
+const addBotLoading = ref(false);
+const updateBotLoading = ref(false);
+
 const bot = reactive({
   title: "",
   description: "",
   content: `#include <iostream>
 
-const int N = 15;
+using namespace std;
+const int N = 20;
 
 int color;
 int rows, cols;
@@ -213,8 +230,10 @@ onMounted(() => {
 });
 
 const addBotOnClick = async () => {
+  addBotLoading.value = true;
   const data = await addBot(token.value, bot);
   if (data.message === "success") {
+    addBotLoading.value = false;
     createVisible.value = false;
 
     ElMessage({
@@ -229,6 +248,7 @@ const addBotOnClick = async () => {
     bot.description = "";
     bot.content = "";
   } else {
+    addBotLoading.value = false;
     ElMessage.error(data.message);
   }
 };
@@ -243,6 +263,7 @@ const updatedBot = reactive({
   id: -1,
 });
 
+// 打开模态框
 const modifyBotOnClick = (bot) => {
   updatedBot.title = bot.title;
   updatedBot.description = bot.description;
@@ -253,9 +274,15 @@ const modifyBotOnClick = (bot) => {
 };
 
 const updateBotOnClick = async () => {
+  // 加载动画打开
+  updateBotLoading.value = true;
+
   const data = await updateBot(token.value, updatedBot);
   if (data.message === "success") {
+    // 关闭模态框
     updateVisible.value = false;
+    // 关闭加载动画
+    updateBotLoading.value = false;
 
     ElMessage({
       message: "修改Bot成功",
@@ -270,13 +297,13 @@ const updateBotOnClick = async () => {
     refreshBots();
   } else {
     ElMessage.error(data.message);
+    updateBotLoading.value = false;
   }
 };
 
 const removeBotOnClick = async (botId) => {
   const data = await removeBot(token.value, botId);
   if (data.message === "success") {
-    
     ElMessage({
       message: "删除Bot成功",
       type: "success",

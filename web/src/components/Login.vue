@@ -46,6 +46,8 @@
             size="large"
             type="primary"
             @click="loginEvent"
+            v-loading="loginLoading"
+            :disabled="loginDisabled"
             >登录</el-button
           >
         </el-col>
@@ -72,6 +74,9 @@ import { setToken as setTokenToLocalStorage } from "@/utils/storage";
 const router = useRouter();
 const route = useRoute();
 
+const loginLoading = ref(false);
+const loginDisabled = ref(false);
+
 const alertNotice = ref("请输入账号密码");
 const username = ref("");
 const password = ref("");
@@ -89,6 +94,8 @@ onUnmounted(() => {
 });
 
 async function loginEvent() {
+  loginLoading.value = true;
+  loginDisabled.value = true;
   const data = await login(username.value, password.value);
 
   if (data.message === "success") {
@@ -100,6 +107,7 @@ async function loginEvent() {
     // 获取用户信息
     asyncGetInfo();
 
+    loginLoading.value = false;
     alertNotice.value = "登录成功!";
     alertType.value = "success";
 
@@ -114,6 +122,9 @@ async function loginEvent() {
       }
     }, 1200);
   } else {
+    loginLoading.value = false;
+    loginDisabled.value = false;
+    
     alertNotice.value = data.message;
     alertType.value = "error";
   }

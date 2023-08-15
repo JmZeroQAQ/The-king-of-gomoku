@@ -52,6 +52,8 @@
             size="large"
             type="primary"
             @click="registerEvent"
+            v-loading="registerLoading"
+            :disabled="registerDisabled"
             >注册</el-button
           >
         </el-col>
@@ -73,6 +75,9 @@
 import { ref } from "vue";
 import { register } from '@/apis/register';
 
+const registerLoading = ref(false);
+const registerDisabled = ref(false);
+
 const alertNotice = ref("注册账号");
 const username = ref("");
 const password = ref("");
@@ -85,9 +90,12 @@ const emit = defineEmits(["setState"]);
 
 
 async function registerEvent() {
+  registerLoading.value = true;
+  registerDisabled.value = true;
   const data = await register(username.value, password.value, confirmed_password.value);
   
   if(data.message === "success") {
+    registerLoading.value = false;
     alertNotice.value = "账号注册成功";
     alertType.value = "success";
 
@@ -96,6 +104,8 @@ async function registerEvent() {
     }, 1000);
 
   } else {
+    registerLoading.value = false;
+    registerDisabled.value = false;
     alertNotice.value = data.message;
     alertType.value = "error";
   }
