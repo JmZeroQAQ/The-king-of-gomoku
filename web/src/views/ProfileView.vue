@@ -27,9 +27,9 @@
           <el-table-column align="center" label="Date" prop="create_time" />
           <el-table-column align="center">
             <template #header>
-              <el-button @click="getRecordsList(1)" circle
-                ><el-icon><Refresh /></el-icon
-              ></el-button>
+              <el-button @click="refreshList" v-loading="refreshLoading" :disabled="refreshLoading">
+                <el-icon><Refresh /></el-icon>刷新
+            </el-button>
             </template>
             <template #default="scope">
               <el-button
@@ -52,12 +52,13 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
 import { storeToRefs } from "pinia";
 import { getMyRecords } from "@/apis/record";
-import { ElMessage } from 'element-plus';
+import { ElMessage } from "element-plus";
 
 const userStore = useUserStore();
 const { user, token } = storeToRefs(userStore);
 
 const loading = ref(true);
+const refreshLoading = ref(false);
 const records = ref([]);
 
 async function getRecordsList(page) {
@@ -65,12 +66,13 @@ async function getRecordsList(page) {
   if (data.message === "success") {
     records.value = data.records;
     loading.value = false;
-
+    refreshLoading.value = false;
     ElMessage({
       message: "获取记录成功",
       type: "success",
     });
   } else {
+    refreshLoading.value = false;
     ElMessage.error(data.message);
   }
 }
@@ -78,6 +80,11 @@ async function getRecordsList(page) {
 onMounted(() => {
   getRecordsList(1);
 });
+
+function refreshList() {
+  refreshLoading.value = true;
+  getRecordsList(1);
+}
 
 const router = useRouter();
 

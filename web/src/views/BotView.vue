@@ -5,6 +5,7 @@
         <h1 style="text-align: center">我的Bot</h1>
         <el-table
           :data="botData"
+          v-loading="botListLoading"
           style="width: 100%"
           max-height="100vh - 180px"
         >
@@ -185,6 +186,7 @@ import "ace-builds/src-min-noconflict/ext-language_tools";
 const createVisible = ref(false);
 
 // 加载动画控制
+const botListLoading = ref(true);
 const addBotLoading = ref(false);
 const updateBotLoading = ref(false);
 
@@ -222,6 +224,7 @@ const refreshBots = async () => {
   const data = await getBotList(token.value);
   if (data.message === "success") {
     botData.value = data.bots;
+    botListLoading.value = false;
   }
 };
 
@@ -302,6 +305,7 @@ const updateBotOnClick = async () => {
 };
 
 const removeBotOnClick = async (botId) => {
+  botListLoading.value = true;
   const data = await removeBot(token.value, botId);
   if (data.message === "success") {
     ElMessage({
@@ -311,6 +315,7 @@ const removeBotOnClick = async (botId) => {
     // 刷新Bot列表
     refreshBots();
   } else {
+    botListLoading.value = false;
     ElMessage.error(data.message);
   }
 };

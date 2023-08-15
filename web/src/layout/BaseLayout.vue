@@ -9,7 +9,7 @@
         <router-view v-slot="{ Component }">
           <transition name="el-fade-in-linear" mode="out-in">
             <keep-alive
-              :include="['RecordListView', 'ProfileView', 'RanklistView']"
+              :include="['RecordListView', 'ProfileView', 'RanklistView', 'BotView']"
             >
               <component :is="Component" :key="$route.path"/>
             </keep-alive>

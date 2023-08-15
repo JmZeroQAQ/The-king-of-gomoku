@@ -13,9 +13,14 @@
       <el-table-column align="center" label="Date" prop="create_time" />
       <el-table-column align="center">
         <template #header>
-          <el-button @click="getRecordsList(1)" circle
-            ><el-icon><Refresh /></el-icon
-          ></el-button>
+          <el-button
+            v-loading="refreshLoading"
+            :disabled="refreshLoading"
+            @click="refreshList"
+            
+          >
+            <el-icon><Refresh /></el-icon>刷新
+          </el-button>
         </template>
         <template #default="scope">
           <el-button
@@ -37,6 +42,7 @@ import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
 const loading = ref(true);
+const refreshLoading = ref(false);
 const records = ref([]);
 
 async function getRecordsList(page) {
@@ -44,12 +50,14 @@ async function getRecordsList(page) {
   if (data.message === "success") {
     records.value = data.records;
     loading.value = false;
+    refreshLoading.value = false;
 
     ElMessage({
       message: "获取近期对局成功",
       type: "success",
     });
   } else {
+    refreshLoading.value = false;
     ElMessage.error(data.message);
   }
 }
@@ -57,6 +65,11 @@ async function getRecordsList(page) {
 onMounted(() => {
   getRecordsList(1);
 });
+
+function refreshList() {
+  refreshLoading.value = true;
+  getRecordsList(1);
+}
 
 const router = useRouter();
 
