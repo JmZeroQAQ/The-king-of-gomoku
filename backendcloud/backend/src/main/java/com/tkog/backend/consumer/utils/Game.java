@@ -400,6 +400,12 @@ public class Game extends Thread {
             checkSituation();
             // 判断游戏是否结束
             if(isGameOver()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 // 发送游戏结果
                 sendResult();
                 // 将结果保存到数库

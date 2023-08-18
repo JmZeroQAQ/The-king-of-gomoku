@@ -47,6 +47,11 @@ export const useGameStore = defineStore('gameStore', () => {
         isUpdated.value = true;
     }
 
+    function cleanPosition() {
+        position.value = -1;
+        isUpdated.value = false;
+    }
+
     function setWinSet(newSet) {
         winSet.value = newSet;
     }
@@ -70,6 +75,7 @@ export const useGameStore = defineStore('gameStore', () => {
         webSocket,
         setWebSocket,
         updatePosition,
+        cleanPosition,
         setOpponent,
         setColor,
         isUpdated,

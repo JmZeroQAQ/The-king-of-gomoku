@@ -34,6 +34,7 @@ const {
   setWebSocket,
   setColor,
   updatePosition,
+  cleanPosition,
   setWinSet,
   setGameStat,
   setWinner,
@@ -42,6 +43,7 @@ const {
 function resetGame() {
   currentComponent.value = "match";
   current_step.value = 0;
+  cleanPosition();
 }
 
 let webSocket = null;
@@ -87,7 +89,7 @@ onMounted(() => {
 
       setTimeout(() => {
         currentComponent.value = "result";
-      }, 1200);
+      }, 6000);
     }
   };
 });
