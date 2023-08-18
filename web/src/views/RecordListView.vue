@@ -1,6 +1,6 @@
 <template>
     <el-row justify="center">
-        <el-col :span="16">
+        <el-col :lg="16" :md="20">
             <RecordList />
         </el-col>
     </el-row>

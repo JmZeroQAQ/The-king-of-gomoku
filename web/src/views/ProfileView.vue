@@ -1,6 +1,6 @@
 <template>
   <el-row justify="center" :gutter="20">
-    <el-col :span="6" class="profile-card">
+    <el-col :lg="6" :md="6" class="profile-card">
       <el-card>
         <div class="avatar">
           <img
@@ -12,7 +12,7 @@
         </div>
       </el-card>
     </el-col>
-    <el-col :span="14">
+    <el-col :lg="14" :md="18">
       <el-card>
         <h1 style="text-align: center">我的对局</h1>
         <el-table
@@ -103,7 +103,7 @@ const openRecordOnClick = (recordId) => {
   .avatar {
     img {
       display: block;
-      max-width: 300px;
+      max-width: 100%;
       margin: 0 auto;
       border: 1px solid #dedfe0;
       border-radius: 5px;

@@ -13,6 +13,14 @@ public class ReceiveBotMoveServiceImpl implements ReceiveBotMoveService {
     @Override
     public String receiveBotMove(Integer userId, Integer position) {
         System.out.println("receive bot move: " + userId + " " + position);
+
+        // bot下棋需要等待一秒后再来读取结果
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         WebSocketServer conn = WebSocketServer.users.get(userId);
         if(checkConnection(conn)) {
             conn.game.setNextChessPosition(userId, position);

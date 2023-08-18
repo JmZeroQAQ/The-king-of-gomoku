@@ -26,7 +26,13 @@ public class MatchingPool extends Thread {
 
     public void addPlayer(Integer userId, Integer rating, Integer botId) {
         lock.lock();
+
         try {
+            // 如果连接池已经存在这个用户,就直接跳过
+            for(Player player: players) {
+                if(player.getUserId().equals(userId)) return ;
+            }
+
             players.add(new Player(userId, rating, 0, botId));
         } finally {
             lock.unlock();
@@ -74,7 +80,7 @@ public class MatchingPool extends Thread {
     }
 
     private void matchPlayers() {
-        System.out.println(players.toString());
+//        System.out.println(players.toString());
         boolean[] used = new boolean[players.size()];
         for(int i = 0; i < players.size(); i++) {
             if(used[i]) continue;
