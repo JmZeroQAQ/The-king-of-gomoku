@@ -14,6 +14,7 @@
     <img alt="Home" src="https://github.com/JmZeroQAQ/ImageRepository/raw/main/tkog/tkog-bot.png" />
     <img alt="Record" src="https://github.com/JmZeroQAQ/ImageRepository/raw/main/tkog/tkog-record.png" />
 </div>
+
 ## 🚀 快速开始
 
 前端运行：
