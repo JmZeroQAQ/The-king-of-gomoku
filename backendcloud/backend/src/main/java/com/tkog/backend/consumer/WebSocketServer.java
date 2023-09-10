@@ -8,6 +8,7 @@ import com.tkog.backend.mapper.RecordMapper;
 import com.tkog.backend.mapper.UserMapper;
 import com.tkog.backend.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -33,9 +34,10 @@ public class WebSocketServer {
     public Game game = null;
     public String gameId = null;
 
-    private final static String addPlayerUrl = "http://127.0.0.1:3001/match/add/";
-    private final static String removePlayerUrl = "http://127.0.0.1:3001/match/remove/";
-    private final static String runningBotUrl = "http://127.0.0.1:3002/bot/add/";
+
+    private static String addPlayerUrl;
+    private static String removePlayerUrl;
+    private static String runningBotUrl;
 
     public static UserMapper userMapper;
     public static RecordMapper recordMapper;
@@ -43,6 +45,21 @@ public class WebSocketServer {
 
     public static RestTemplate restTemplate;
 
+
+    @Value("${matchSystem.url.add}")
+    public void setAddPlayerUrl(String addPlayerUrl) {
+        WebSocketServer.addPlayerUrl = addPlayerUrl;
+    }
+
+    @Value("${matchSystem.url.remove}")
+    public void setRemovePlayerUrl(String removePlayerUrl) {
+        WebSocketServer.removePlayerUrl = removePlayerUrl;
+    }
+
+    @Value("${botSystem.url.add}")
+    public void setRunningBotUrl(String runningBotUrl) {
+        WebSocketServer.runningBotUrl = runningBotUrl;
+    }
 
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
@@ -85,6 +102,10 @@ public class WebSocketServer {
         System.out.println("disconnected");
         if(this.user != null) {
             users.remove(this.user.getId());
+
+            // 这个用户有可能还在匹配，尝试将这个用户从匹配池移开
+            // 即使这个用户不在匹配池也没关系
+            stopMatching();
         }
     }
 

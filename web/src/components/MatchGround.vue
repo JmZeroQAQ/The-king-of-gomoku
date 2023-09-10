@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useGameStore } from "@/store/game";
 import { useUserStore } from "@/store/user";
 import { storeToRefs } from "pinia";
@@ -103,6 +103,16 @@ async function getBots() {
 onMounted(() => {
   getBots();
 });
+
+onUnmounted(() => {
+  if(matchInfo.value === "取消匹配") {
+    webSocket.value.send(
+      JSON.stringify({
+        event: "stop-matching",
+      })
+    );
+  }
+})
 </script>
 
 <style lang="scss" scoped>

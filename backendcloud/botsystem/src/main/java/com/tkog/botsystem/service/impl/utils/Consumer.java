@@ -1,6 +1,7 @@
 package com.tkog.botsystem.service.impl.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,8 +18,21 @@ import java.util.concurrent.TimeUnit;
 public class Consumer extends Thread {
     private Bot bot;
     private long timeout;
+    private static String workDir;
+
     private static RestTemplate restTemplate;
-    private final static String botMoveUrl = "http://127.0.0.1:3000/game/bot/move/";
+
+    private static String botMoveUrl;
+
+    @Value("${workdir.root}")
+    public void setWorkDir(String workDir) {
+        Consumer.workDir = workDir;
+    }
+
+    @Value("${backend.url.move}")
+    public void setBotMoveUrl(String botMoveUrl) {
+        Consumer.botMoveUrl = botMoveUrl;
+    }
 
     @Autowired
     public void setRestTemplate(RestTemplate restTemplate) {
@@ -50,7 +64,7 @@ public class Consumer extends Thread {
     }
 
     private int readPosition() {
-        File file = new File("output");
+        File file = new File(workDir + "output");
         int position;
         try {
             Scanner in = new Scanner(file);
@@ -67,12 +81,12 @@ public class Consumer extends Thread {
     @Override
     public void run() {
         // 将输入和代码写入文件
-        writeFile("/home/jmzero/app/code/input", this.bot.getInput());
-        writeFile("/home/jmzero/app/code/code.cpp", this.bot.getBotCode());
+        writeFile(workDir + "code/input", this.bot.getInput());
+        writeFile(workDir + "code/code.cpp", this.bot.getBotCode());
 
         Process process;
         try {
-            process = Runtime.getRuntime().exec("./start.sh");
+            process = Runtime.getRuntime().exec(workDir + "start.sh");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -90,7 +104,7 @@ public class Consumer extends Thread {
         // 如果脚本运行的没有问题,就将输出结果发送回去
         if(process.exitValue() == 0) {
             int position = readPosition();
-            System.out.println("output position is: " + position);
+//            System.out.println("output position is: " + position);
 
             MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
             data.add("userId", bot.getUserId().toString());

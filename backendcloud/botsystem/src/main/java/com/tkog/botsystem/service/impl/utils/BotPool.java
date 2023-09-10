@@ -21,7 +21,7 @@ public class BotPool extends Thread {
     }
 
     private void consume(Bot bot) {
-        System.out.println(bot.getInput());
+//        System.out.println(bot.getInput());
         Consumer consumer = new Consumer();
         consumer.startTimeout(4000, bot);
     }
