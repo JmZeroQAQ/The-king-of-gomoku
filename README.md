@@ -43,7 +43,7 @@ use tkog;
 source ~/The-king-of-gomoku/script.sql;
 ```
 
-在开始运行后端前请务必确保已经看了[**注意事项**](#💥-注意事项)。
+在开始运行后端前请务必确保已经看了[**注意事项**](#-注意事项)。
 
 后端运行：
 - 使用 Idea 打开 `The-king-of-gomoku/backendcloud/`
