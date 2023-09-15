@@ -1,0 +1,9 @@
+FROM gcc:latest
+
+COPY ./code/* /app/code/
+
+WORKDIR /app/code/
+
+RUN g++ -o main code.cpp
+
+ENTRYPOINT ["./main"]
